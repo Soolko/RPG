@@ -17,7 +17,11 @@ public class Config
 	public Config(File file, Config.Callbacks callbacks) throws IOException
 	{
 		this.file = file;
-		data = file.createNewFile() ? load(file) : callbacks.defaultState();
+		
+		boolean loadDefaults = file.createNewFile();
+		data = !loadDefaults ? load(file) : callbacks.defaultState();
+		
+		if(loadDefaults) save();
 	}
 	
 	public static Map<String, Object> load(File file) throws IOException
@@ -30,7 +34,7 @@ public class Config
 	public void save() throws IOException
 	{
 		final Yaml yaml = new Yaml();
-		String output = yaml.dump(data);
+		String output = yaml.dumpAsMap(data);
 		
 		// Clear
 		file.delete();
@@ -38,6 +42,12 @@ public class Config
 		
 		// Write
 		try(FileWriter fw = new FileWriter(file)) { fw.write(output); }
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T get(String key)
+	{
+		return (T) data.get(key);
 	}
 	
 	public interface Callbacks
