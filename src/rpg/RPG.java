@@ -1,16 +1,22 @@
 package rpg;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 
-public final class RPG
+public final class RPG implements Runnable
 {
+	public AtomicBoolean running = new AtomicBoolean(true);
+	
 	public RPG()
 	{
 		// Window
@@ -20,30 +26,49 @@ public final class RPG
 		frame.addWindowListener(new WindowListener()
 		{
 			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				
-			}
+			public void windowClosing(WindowEvent e) { running.set(false); }
 			
-			@Override
-			public void windowActivated(WindowEvent e) { }
-			@Override
-			public void windowClosed(WindowEvent e) { }
-			@Override
-			public void windowDeactivated(WindowEvent e) { }
-			@Override
-			public void windowDeiconified(WindowEvent e) { }
-			@Override
-			public void windowIconified(WindowEvent e) { }
-			@Override
-			public void windowOpened(WindowEvent e) { }
+			@Override public void windowActivated(WindowEvent e) { }
+			@Override public void windowClosed(WindowEvent e) { }
+			@Override public void windowDeactivated(WindowEvent e) { }
+			@Override public void windowDeiconified(WindowEvent e) { }
+			@Override public void windowIconified(WindowEvent e) { }
+			@Override public void windowOpened(WindowEvent e) { }
 		});
-		frame.setVisible(true);
 	}
 	
-	public static final RPG instance;
+	@Override
+	public void run()
+	{
+		// Init frame
+		frame.setVisible(true);
+		
+		int width = config.get("width");
+		int height = config.get("height");
+		
+		BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+		
+		Graphics frameGraphics = frame.getGraphics();
+		
+		while(running.get())
+		{
+			// Clear buffer
+			canvasGraphics.clearRect(0, 0, width, height);
+			
+			// Render here
+			
+			
+			// Draw buffer
+			frameGraphics.drawImage(canvas, 0, 0, width, height, null);
+		}
+		
+		frame.setVisible(false);
+	}
 	
 	// Static
+	public static final RPG instance;
+	
 	public static final File configFile = new File("RPG.yml");
 	public static final Config config;
 	
@@ -78,8 +103,22 @@ public final class RPG
 		instance = new RPG();
 	}
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws InterruptedException
 	{
-		System.out.println(config.<Integer>get("width"));
+		// Start game in new thread
+		Thread mainThread = new Thread(instance);
+		mainThread.setName("Main Game Thread");
+		mainThread.start();
+		
+		// Join that thread
+		mainThread.join();
+		
+		// Save stuff & exit
+		try { config.save(); }
+		catch(IOException e)
+		{
+			System.err.println("Failed to save config.\nReason:");
+			e.printStackTrace();
+		}
 	}
 }
