@@ -3,8 +3,8 @@ package rpg.world.noise;
 public abstract class NoiseAlgorithm
 {
 	// Seeds
-	private static final long DefaultSeed = 0L;
-	public final long seed;
+	public static final long DefaultSeed = 0L;
+	public long seed;
 	
 	// Constructors
 	public NoiseAlgorithm() { this(DefaultSeed); }
