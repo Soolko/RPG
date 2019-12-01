@@ -1,6 +1,8 @@
 package rpg.world.noise;
 
 /*
+ * Source: https://gist.github.com/KdotJPG/b1270127455a94ac5d19
+ * 
  * Edits to source:
  * - Reformatted to my code style
  * - Adapted to work with NoiseMap
