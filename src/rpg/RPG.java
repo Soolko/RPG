@@ -69,11 +69,12 @@ public final class RPG implements Runnable
 	// Static
 	public static final RPG instance;
 	
-	public static final File configFile = new File("RPG.yml");
-	public static final Config config;
-	
-	private static final String title = "RPG";
+	private static final String name = "RPG";
+	private static final String title = name;
 	public static final JFrame frame = new JFrame(title);
+	
+	public static final File configFile = new File(name + ".yml");
+	public static final Config config;
 	
 	static
 	{
