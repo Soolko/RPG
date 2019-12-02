@@ -2,15 +2,11 @@ package rpg.world.tiles;
 
 import java.awt.Image;
 
-public class Tile
+import rpg.rendering.SpriteRenderer;
+
+public class Tile extends SpriteRenderer
 {
-	public Image texture;
-	public boolean collideable;
+	public Tile(Image texture) { super(texture); }
 	
-	public Tile(Image texture) { this(texture, false); }
-	public Tile(Image texture, boolean collideable)
-	{
-		this.texture = texture;
-		this.collideable = collideable;
-	}
+	public boolean collideable;
 }

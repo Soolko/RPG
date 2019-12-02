@@ -11,7 +11,7 @@ import rpg.world.tiles.Tile;
 public class HeavenBiome extends Biome
 {
 	// Assets
-	public static final Color HeavenColour = new Color(33, 206, 86);
+	public static final Color HeavenColour = new Color(33, 255, 106, 255);
 	public static final BufferedImage HeavenGrassTexture = setColour(GrassBase, HeavenColour);
 	
 	// Tiles

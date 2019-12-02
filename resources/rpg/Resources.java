@@ -1,34 +1,51 @@
 package rpg;
+
+import static java.lang.Math.*;
+
 import java.io.File;
 import java.io.IOException;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import javax.imageio.ImageIO;
 
 public final class Resources
 {
-	// Grass Textures
+	// Textures
+	public static final BufferedImage MissingTexture;
 	public static final BufferedImage GrassBase;
 	
 	static
 	{
-		GrassBase = load("Textures/Grass.png");
+		// Missing Texture creation
+		MissingTexture = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
+		
+		Graphics2D g2d = MissingTexture.createGraphics();
+		g2d.setColor(Color.BLACK);
+		g2d.fillRect(0, 0, 2, 2);
+		g2d.setColor(Color.MAGENTA);
+		g2d.fillRect(0, 0, 1, 1);
+		g2d.fillRect(1, 1, 2, 2);
+		g2d.dispose();
+		
+		// Textures
+		GrassBase = load("textures/grass.png");
 	}
 	
-	private static BufferedImage load(String path)
+	public static BufferedImage load(String path)
 	{
 		BufferedImage image = null;
 		try { image = getImage(path); }
 		catch(IOException e)
 		{
 			System.err.println("Failed to load texture: " + path);
+			image = MissingTexture;
 		}
 		return image;
 	}
 	
-	public static BufferedImage getImage(String path) throws IOException
+	private static BufferedImage getImage(String path) throws IOException
 	{
 		File file = new File(Resources.class.getResource(path).getFile());
 		return ImageIO.read(file);
@@ -36,18 +53,51 @@ public final class Resources
 	
 	public static BufferedImage setColour(BufferedImage image, Color colour)
 	{
-		float r = colour.getRed();
-		float g = colour.getGreen();
-		float b = colour.getBlue();
+		for(int x = 0; x < image.getWidth(); x++)
+		for(int y = 0; y < image.getHeight(); y++)
+		{
+			// Get and split pixel into components
+			int[] rgba = splitPixel(image.getRGB(x, y));
+			
+			// Multiply by the colour
+			rgba[0] *= colour.getRed();
+			rgba[1] *= colour.getGreen();
+			rgba[2] *= colour.getBlue();
+			rgba[3] *= colour.getAlpha();
+			for(int i = 0; i < 4; i++) rgba[i] = (int) sqrt(rgba[i]);
+			
+			// Recombine into pixel to set
+			int pixel = combinePixel(rgba);
+			image.setRGB(x, y, pixel);
+		}
+		return image;
+	}
+	
+	public static int[] splitPixel(int pixel)
+	{
+		return new int[]
+		{
+			(pixel >> 16) & 0xFF,	// R
+			(pixel >> 8) & 0xFF,	// G
+			pixel & 0xFF,			// B
+			(pixel >> 24) & 0xFF	// A
+		};
+	}
+	
+	public static int combinePixel(int[] pixel)
+	{
+		return combinePixel(pixel[0], pixel[1], pixel[2], pixel[3]);
+	}
+	
+	public static int combinePixel(int r, int g, int b, int a)
+	{
+		int argb = 0;
 		
-		if(r > 0) r = 255.0f / r * 100.0f;
-		if(g > 0) g = 255.0f / g * 100.0f;
-		if(b > 0) b = 255.0f / b * 100.0f;
+		argb |= a << 24;
+		argb |= r << 16;
+		argb |= g << 8;
+		argb |= b;
 		
-		final float[] factors = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
-		float[] offsets = new float[] { r, g, b, 0.0f };
-		
-		RescaleOp op = new RescaleOp(factors, offsets, null);
-		return op.filter(image, null);
+		return argb;
 	}
 }

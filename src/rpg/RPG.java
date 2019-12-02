@@ -13,9 +13,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 
+import rpg.maths.Vector2;
+import rpg.world.biomes.HeavenBiome;
+
 public final class RPG implements Runnable
 {
+	// Thread
 	public AtomicBoolean running = new AtomicBoolean(true);
+	
+	// Viewport
+	public Vector2 viewportPosition = Vector2.Zero;
+	public Vector2 viewportScale = Vector2.One;
 	
 	public RPG()
 	{
@@ -48,7 +56,6 @@ public final class RPG implements Runnable
 		
 		BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-		
 		Graphics frameGraphics = frame.getGraphics();
 		
 		while(running.get())
@@ -56,14 +63,15 @@ public final class RPG implements Runnable
 			// Clear buffer
 			canvasGraphics.clearRect(0, 0, width, height);
 			
-			// Render here
-			
+			// Draw here
+			HeavenBiome.HeavenGrass.render(canvasGraphics, viewportPosition, viewportScale);
 			
 			// Draw buffer
 			frameGraphics.drawImage(canvas, 0, 0, width, height, null);
 		}
 		
 		frame.setVisible(false);
+		frame.dispose();
 	}
 	
 	// Static
@@ -75,6 +83,9 @@ public final class RPG implements Runnable
 	
 	public static final File configFile = new File(name + ".yml");
 	public static final Config config;
+	
+	// Render static
+	public static final double BaseScale = 64;
 	
 	static
 	{
