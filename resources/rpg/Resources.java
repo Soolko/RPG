@@ -1,13 +1,13 @@
 package rpg;
 
-import static java.lang.Math.*;
-
-import java.io.File;
-import java.io.IOException;
+import static java.lang.Math.sqrt;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.imageio.ImageIO;
 
 public final class Resources
@@ -47,8 +47,10 @@ public final class Resources
 	
 	private static BufferedImage getImage(String path) throws IOException
 	{
-		File file = new File(Resources.class.getResource(path).getFile());
-		return ImageIO.read(file);
+		InputStream resource = Resources.class.getResourceAsStream(path);
+		
+		if(resource == null) return MissingTexture;
+		else return ImageIO.read(resource);
 	}
 	
 	public static BufferedImage setColour(BufferedImage image, Color colour)

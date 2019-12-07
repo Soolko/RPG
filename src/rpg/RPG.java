@@ -14,7 +14,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
 
 import rpg.maths.Vector2;
+import rpg.world.ProceduralWorld;
+import rpg.world.biomes.Biome;
 import rpg.world.biomes.HeavenBiome;
+import rpg.world.biomes.OceanBiome;
+import rpg.world.noise.SimplexNoise;
 
 public final class RPG implements Runnable
 {
@@ -24,6 +28,8 @@ public final class RPG implements Runnable
 	// Viewport
 	public Vector2 viewportPosition = Vector2.Zero;
 	public Vector2 viewportScale = Vector2.One;
+	
+	public Input input = new Input();
 	
 	public RPG()
 	{
@@ -43,6 +49,7 @@ public final class RPG implements Runnable
 			@Override public void windowIconified(WindowEvent e) { }
 			@Override public void windowOpened(WindowEvent e) { }
 		});
+		frame.addKeyListener(input);
 	}
 	
 	@Override
@@ -58,13 +65,24 @@ public final class RPG implements Runnable
 		Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
 		Graphics frameGraphics = frame.getGraphics();
 		
+		ProceduralWorld world = new ProceduralWorld
+		(
+			new SimplexNoise(),
+			new Biome[]
+			{
+				new OceanBiome(),
+				new HeavenBiome()
+			}
+		);
+		
 		while(running.get())
 		{
 			// Clear buffer
 			canvasGraphics.clearRect(0, 0, width, height);
 			
 			// Draw here
-			HeavenBiome.HeavenGrass.render(canvasGraphics, viewportPosition, viewportScale);
+			world.render(canvasGraphics, viewportPosition, viewportScale);
+			input.update();
 			
 			// Draw buffer
 			frameGraphics.drawImage(canvas, 0, 0, width, height, null);

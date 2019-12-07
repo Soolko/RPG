@@ -1,21 +1,111 @@
 package rpg.world;
 
+import static java.lang.Math.floor;
+
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
+import rpg.RPG;
+import rpg.maths.Vector2;
+import rpg.rendering.Renderable;
 import rpg.world.biomes.Biome;
+import rpg.world.tiles.Tile;
 
-public class ProceduralWorld
+public class ProceduralWorld implements Renderable
 {
 	public final Generator generator;
-	public Biome[] biomes;
+	public final Biome[] biomes;
 	
-	public ProceduralWorld(Generator generator)
+	// Tilemap
+	public class TileDefinition extends Rectangle
 	{
-		this.generator = generator;
+		private static final long serialVersionUID = -3963486247971723271L;
+		
+		public Tile tile;
 	}
 	
-	public void render(Graphics2D g2d)
+	public List<TileDefinition> tiles = new ArrayList<TileDefinition>();
+	public Rectangle generatedBounds = new Rectangle(0, 0, 0, 0);
+	
+	public ProceduralWorld(Generator generator, Biome[] biomes)
 	{
+		this.generator = generator;
+		this.biomes = biomes;
+	}
+	
+	@Override
+	public void render(Graphics2D g2d, Vector2 position, Vector2 scale)
+	{
+		Vector2 bottomRight = new Vector2
+		(
+			position.x() + RPG.frame.getWidth(),
+			position.y() + RPG.frame.getHeight()
+		);
 		
+		Rectangle currentBounds = getBounds(position, bottomRight);
+		if(generatedBounds != currentBounds) generate(currentBounds);
+		
+		for(TileDefinition tile : tiles)
+		{
+			int x = (int) (position.x + (tile.x * RPG.BaseScale));
+			int y = (int) (position.y + (tile.y * RPG.BaseScale));
+			tile.tile.render(g2d, new Vector2(x, y), scale);
+		}
+	}
+	
+	/**
+	 * Not the most efficient way to flush then rebuild,
+	 * but time limits require it.
+	 */
+	public void generate(Rectangle currentBounds)
+	{
+		// Flush tiles
+		tiles.clear();
+		
+		// Rebuild
+		for(int x = currentBounds.x; x < currentBounds.width; x++)
+		for(int y = currentBounds.y; y < currentBounds.height; y++)
+		{
+			TileDefinition tile = new TileDefinition();
+			tile.x = x;
+			tile.y = y;
+			tile.tile = generateAt(x, y);
+			tiles.add(tile);
+		}
+		
+		generatedBounds = currentBounds;
+	}
+	
+	public Tile generateAt(double x, double y)
+	{
+		Tile tile = null;
+		
+		// Get base tile
+		for(Biome biome : biomes)
+		{
+			switch(biome.blendMode)
+			{
+			case CONSTANT:
+				tile = biome.tileAt(generator.sample(x, y));
+				break;
+			case SIMPLEX:
+				if(generator.sample(x, y) > biome.noiseThreashold) tile = biome.tileAt(generator.sample(x, y));
+				break;
+			}
+		}
+		
+		return tile;
+	}
+	
+	public Rectangle getBounds(Vector2 topLeft, Vector2 bottomRight)
+	{
+		int x = (int) floor(topLeft.x() / RPG.BaseScale) + 1;
+		int y = (int) floor(topLeft.y() / RPG.BaseScale) + 1;
+		int x2 = -x + (int) (RPG.frame.getWidth() / RPG.BaseScale) + 2;
+		int y2 = -y + (int) (RPG.frame.getHeight() / RPG.BaseScale) + 2;
+		
+		return new Rectangle(-x, -y, x2, y2);
 	}
 }

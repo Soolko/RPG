@@ -17,6 +17,8 @@ public class HeavenBiome extends Biome
 	// Tiles
 	public static final Tile HeavenGrass = new Tile(HeavenGrassTexture);
 	
+	public HeavenBiome() { super(BlendMode.SIMPLEX, 0.75); }
+	
 	@Override
 	public Tile tileAt(double val)
 	{

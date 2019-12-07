@@ -27,22 +27,30 @@ public class SpriteRenderer implements Renderable
 		this.texture = texture;
 	}
 	
-	@Override
-	public void render(Graphics2D g2d, Vector2 position, Vector2 scale)
+	public Vector2 getScale()
 	{
 		double x = globalScale ? RPG.BaseScale : texture.getWidth(null) * this.scale.x();
 		double y = globalScale ? RPG.BaseScale : texture.getWidth(null) * this.scale.y();
 		
-		x *= scale.x();
-		y *= scale.y();
+		return new Vector2(x, y);
+	}
+	
+	@Override
+	public void render(Graphics2D g2d, Vector2 position, Vector2 scale)
+	{
+		Vector2 thisScale = getScale();
+		
+		thisScale.x *= scale.x();
+		thisScale.y *= scale.y();
 		
 		g2d.drawImage
 		(
 			texture,
 			(int) position.x(),
 			(int) position.y(),
-			(int) (position.x() + x),
-			(int) (position.y() + y),
+			(int) (position.x() + thisScale.x()),
+			(int) (position.y() + thisScale.y()),
+			0, 0, texture.getWidth(null), texture.getHeight(null),
 			null
 		);
 	}
