@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import rpg.maths.Vector2;
 import rpg.world.ProceduralWorld;
 import rpg.world.biomes.Biome;
-import rpg.world.biomes.HeavenBiome;
+import rpg.world.biomes.PlainsBiome;
 import rpg.world.biomes.OceanBiome;
 import rpg.world.noise.SimplexNoise;
 
@@ -65,13 +65,16 @@ public final class RPG implements Runnable
 		Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
 		Graphics frameGraphics = frame.getGraphics();
 		
+		PlainsBiome plains = new PlainsBiome();
+		plains.noiseThreashold = 0.2;
+		
 		ProceduralWorld world = new ProceduralWorld
 		(
 			new SimplexNoise(),
 			new Biome[]
 			{
 				new OceanBiome(),
-				new HeavenBiome()
+				plains
 			}
 		);
 		

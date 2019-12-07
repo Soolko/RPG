@@ -16,18 +16,19 @@ import rpg.world.tiles.Tile;
 public class ProceduralWorld implements Renderable
 {
 	public final Generator generator;
+	public Vector2 scale = new Vector2(0.01, 0.01);
+	
 	public final Biome[] biomes;
 	
 	// Tilemap
-	public class TileDefinition extends Rectangle
+	public class TileDefinition
 	{
-		private static final long serialVersionUID = -3963486247971723271L;
-		
+		public int x, y;
 		public Tile tile;
 	}
 	
 	public List<TileDefinition> tiles = new ArrayList<TileDefinition>();
-	public Rectangle generatedBounds = new Rectangle(0, 0, 0, 0);
+	public Rectangle generatedBounds = null;
 	
 	public ProceduralWorld(Generator generator, Biome[] biomes)
 	{
@@ -85,14 +86,15 @@ public class ProceduralWorld implements Renderable
 		// Get base tile
 		for(Biome biome : biomes)
 		{
+			double worldMap = generator.sample(x * scale.x, y * scale.y);
 			switch(biome.blendMode)
 			{
-			case CONSTANT:
-				tile = biome.tileAt(generator.sample(x, y));
-				break;
-			case SIMPLEX:
-				if(generator.sample(x, y) > biome.noiseThreashold) tile = biome.tileAt(generator.sample(x, y));
-				break;
+				case CONSTANT:
+					tile = biome.tileAt(worldMap);
+					break;
+				case SIMPLEX:
+					if(worldMap > biome.noiseThreashold) tile = biome.tileAt(worldMap);
+					break;
 			}
 		}
 		
