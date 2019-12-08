@@ -1,5 +1,7 @@
 package rpg.world.noise;
 
+import static rpg.maths.Maths.invlerp;
+
 /*
  * Source: https://gist.github.com/KdotJPG/b1270127455a94ac5d19
  * 
@@ -35,9 +37,9 @@ public class SimplexNoise extends NoiseAlgorithm
 	}
 	
 	// Sample methods
-	@Override public double sample(double x, double y)						{ return eval(x, y); }
-	@Override public double sample(double x, double y, double z)			{ return eval(x, y, z); }
-	@Override public double sample(double x, double y, double z, double w)	{ return eval(x, y, z, w); }
+	@Override public double sample(double x, double y)						{ return invlerp(eval(x, y), -1, 1); }
+	@Override public double sample(double x, double y, double z)			{ return invlerp(eval(x, y, z), -1, 1); }
+	@Override public double sample(double x, double y, double z, double w)	{ return invlerp(eval(x, y, z, w), -1, 1); }
 	
 	/* Original Source
 	 * =============== */
