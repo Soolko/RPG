@@ -9,13 +9,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JFrame;
 
 import rpg.maths.Vector2;
 import rpg.world.ProceduralWorld;
-import rpg.world.noise.SimplexNoise;
 
 public final class RPG implements Runnable
 {
@@ -23,8 +24,6 @@ public final class RPG implements Runnable
 	public AtomicBoolean running = new AtomicBoolean(true);
 	
 	// Viewport
-	public Component scene;
-	
 	public Vector2 viewportPosition = Vector2.Zero;
 	public Vector2 viewportScale = Vector2.One;
 	
@@ -60,6 +59,29 @@ public final class RPG implements Runnable
 		frame.addKeyListener(input);
 	}
 	
+	private AtomicInteger fixeds = new AtomicInteger(0);
+	private AtomicInteger updates = new AtomicInteger(0);
+	private AtomicInteger renders = new AtomicInteger(0);
+	
+	public AtomicInteger fixedPerSecond = new AtomicInteger();
+	public AtomicInteger updatesPerSecond = new AtomicInteger();
+	public AtomicInteger rendersPerSecond = new AtomicInteger();
+	
+	private TimerTask clearValuesTask = new TimerTask()
+	{
+		@Override
+		public void run()
+		{
+			fixedPerSecond.set(fixeds.get());
+			updatesPerSecond.set(updates.get());
+			rendersPerSecond.set(renders.get());
+			
+			fixeds.set(0);
+			updates.set(0);
+			renders.set(0);
+		}
+	};
+	
 	@Override
 	public void run()
 	{
@@ -74,12 +96,6 @@ public final class RPG implements Runnable
 		Graphics frameGraphics = frame.getGraphics();
 		
 		// Test World
-		ProceduralWorld world = new ProceduralWorld
-		(
-			new SimplexNoise(),
-			ProceduralWorld.DefaultBiomes
-		);
-		
 		long last = System.nanoTime();
 		long lag = 0;
 		
@@ -89,18 +105,21 @@ public final class RPG implements Runnable
 			long delta = current - last;
 			
 			last = current;
-			last += delta;
+			lag += delta;
 			
 			while(lag >= FixedInterval)
 			{
 				fixedUpdate();
+				fixeds.incrementAndGet();
 				lag -= FixedInterval;
 			}
 			
 			this.delta = (double) lag / 1000000.0;
 			update();
+			updates.incrementAndGet();
 			
-			render(frameGraphics, canvasGraphics);
+			render(canvas, frameGraphics);
+			renders.incrementAndGet();
 		}
 		
 		// Dispose graphics
@@ -112,27 +131,27 @@ public final class RPG implements Runnable
 		frame.dispose();
 	}
 	
-	private synchronized void fixedUpdate()
-	{
-		
-	}
+	private synchronized void fixedUpdate() { Component.onFixedUpdate(); }
+	private synchronized void update() { Component.onUpdate(); }
 	
-	private synchronized void update()
+	private synchronized void render(BufferedImage canvas, Graphics frameGraphics)
 	{
+		// Poke to avoid """"optimisation""""
+		ProceduralWorld.DefaultWorld.update();
 		
-	}
-	
-	private synchronized void render(Graphics frameGraphics, Graphics2D canvasGraphics)
-	{
 		final int width = config.get("width");
 		final int height = config.get("height");
 		
+		Graphics2D g2d = canvas.createGraphics();
+		
 		// Clear buffer
-		canvasGraphics.clearRect(0, 0, width, height);
+		g2d.clearRect(0, 0, width, height);
 		
 		// Draw here
-		world.render(canvasGraphics, viewportPosition, viewportScale);
-		input.update();
+		Component.onRender(g2d, viewportPosition, viewportScale);
+		
+		// Dispose canvas
+		g2d.dispose();
 		
 		// Draw buffer
 		frameGraphics.drawImage(canvas, 0, 0, width, height, null);

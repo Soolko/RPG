@@ -15,12 +15,15 @@ import rpg.maths.Vector2;
 import rpg.world.biomes.Biome;
 import rpg.world.biomes.Biome.BlendMode;
 import rpg.world.biomes.GenericBiome;
+import rpg.world.noise.SimplexNoise;
 import rpg.world.tiles.Tile;
 
 public class ProceduralWorld extends Component
 {
 	// Default biome creation
+	public static final Generator DefaultGenerator = new SimplexNoise();
 	public static final Biome[] DefaultBiomes;
+	public static ProceduralWorld DefaultWorld;
 	static
 	{
 		// Ocean
@@ -45,6 +48,9 @@ public class ProceduralWorld extends Component
 		
 		// Construct array
 		DefaultBiomes = new Biome[] { ocean, beach, plains };
+		
+		// Construct default world
+		DefaultWorld = new ProceduralWorld(DefaultGenerator, DefaultBiomes);
 	}
 	
 	// Values
@@ -70,7 +76,7 @@ public class ProceduralWorld extends Component
 	}
 	
 	@Override
-	protected void render(Graphics2D g2d, Vector2 position, Vector2 scale)
+	public void render(Graphics2D g2d, Vector2 position, Vector2 scale)
 	{
 		Vector2 bottomRight = new Vector2
 		(
@@ -144,15 +150,6 @@ public class ProceduralWorld extends Component
 		return new Rectangle(-x, -y, x2, y2);
 	}
 	
-	@Override
-	protected void fixedUpdate()
-	{
-		
-	}
-	
-	@Override
-	protected void update()
-	{
-		
-	}
+	@Override public void fixedUpdate() { }
+	@Override public void update() { }
 }

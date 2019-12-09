@@ -3,10 +3,11 @@ package rpg.rendering;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import rpg.Component;
 import rpg.RPG;
 import rpg.maths.Vector2;
 
-public class SpriteRenderer implements Renderable
+public class SpriteRenderer extends Component
 {
 	/**
 	 * The texture to draw.
@@ -22,10 +23,7 @@ public class SpriteRenderer implements Renderable
 	 */
 	public Vector2 scale = Vector2.One;
 	
-	public SpriteRenderer(Image texture)
-	{
-		this.texture = texture;
-	}
+	public SpriteRenderer(Image texture) { this.texture = texture; }
 	
 	public Vector2 getScale()
 	{
@@ -54,4 +52,7 @@ public class SpriteRenderer implements Renderable
 			null
 		);
 	}
+	
+	@Override protected void fixedUpdate() { }
+	@Override protected void update() { }
 }
