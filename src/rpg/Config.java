@@ -11,8 +11,9 @@ import org.yaml.snakeyaml.Yaml;
 
 public class Config
 {
-	protected final File file;
 	public Map<String, Object> data;
+	
+	protected final File file;
 	
 	public Config(File file, Config.Callbacks callbacks) throws IOException
 	{

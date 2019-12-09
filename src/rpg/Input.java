@@ -4,11 +4,12 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import rpg.architecture.Component;
 import rpg.maths.Vector2;
 
 public class Input extends Component implements KeyListener
 {
-	public double speed = 16.0;
+	public double speed = 8;
 	
 	protected boolean[] keys = new boolean[65535];
 	public boolean isPressed(int code) { return keys[code]; }
@@ -34,4 +35,5 @@ public class Input extends Component implements KeyListener
 	
 	@Override public void update() { }
 	@Override public void render(Graphics2D g2d, Vector2 position, Vector2 scale) { }
+	@Override public void renderOverlay(Graphics2D g2d) { }
 }

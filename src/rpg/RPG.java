@@ -9,13 +9,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JFrame;
 
+import rpg.architecture.Component;
 import rpg.maths.Vector2;
+import rpg.rendering.RenderDebug;
 import rpg.world.ProceduralWorld;
 
 public final class RPG implements Runnable
@@ -30,7 +33,7 @@ public final class RPG implements Runnable
 	public Input input = new Input();
 	
 	// Gameloop
-	private static final long FixedFrequency = 15;
+	private static final long FixedFrequency = 16666;
 	public static final long FixedInterval = FixedFrequency * 1000;
 	public static final double FixedDelta = FixedInterval / 1000000;
 	
@@ -44,6 +47,7 @@ public final class RPG implements Runnable
 		frame.setResizable(false);
 		frame.setSize(config.get("width"), config.get("height"));
 		frame.setUndecorated(fullscreen);
+		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowListener()
 		{
@@ -60,42 +64,50 @@ public final class RPG implements Runnable
 	}
 	
 	private AtomicInteger fixeds = new AtomicInteger(0);
-	private AtomicInteger updates = new AtomicInteger(0);
 	private AtomicInteger renders = new AtomicInteger(0);
 	
 	public AtomicInteger fixedPerSecond = new AtomicInteger();
-	public AtomicInteger updatesPerSecond = new AtomicInteger();
 	public AtomicInteger rendersPerSecond = new AtomicInteger();
 	
 	private TimerTask clearValuesTask = new TimerTask()
 	{
 		@Override
-		public void run()
+		public synchronized void run()
 		{
 			fixedPerSecond.set(fixeds.get());
-			updatesPerSecond.set(updates.get());
 			rendersPerSecond.set(renders.get());
 			
 			fixeds.set(0);
-			updates.set(0);
 			renders.set(0);
 		}
 	};
 	
 	@Override
-	public void run()
+	public synchronized void run()
 	{
+		// Add the default world as it's unlisted by default
+		Component.components.add(ProceduralWorld.DefaultWorld);
+		
 		// Init frame
 		frame.setVisible(true);
+		
+		// Init timer task
+		Timer clearTaskTimer = new Timer();
+		clearTaskTimer.scheduleAtFixedRate(clearValuesTask, 1000, 1000);
 		
 		int width = config.get("width");
 		int height = config.get("height");
 		
+		// Render setup
 		BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
 		Graphics frameGraphics = frame.getGraphics();
 		
-		// Test World
+		// Debug stuff
+		RenderDebug renderDebug = new RenderDebug();
+		renderDebug.enabled = true;
+		
+		// Game loop setup
 		long last = System.nanoTime();
 		long lag = 0;
 		
@@ -116,11 +128,13 @@ public final class RPG implements Runnable
 			
 			this.delta = (double) lag / 1000000.0;
 			update();
-			updates.incrementAndGet();
 			
 			render(canvas, frameGraphics);
 			renders.incrementAndGet();
 		}
+		
+		// Dispose timer
+		clearTaskTimer.cancel();
 		
 		// Dispose graphics
 		canvasGraphics.dispose();
@@ -136,9 +150,6 @@ public final class RPG implements Runnable
 	
 	private synchronized void render(BufferedImage canvas, Graphics frameGraphics)
 	{
-		// Poke to avoid """"optimisation""""
-		ProceduralWorld.DefaultWorld.update();
-		
 		final int width = config.get("width");
 		final int height = config.get("height");
 		
@@ -149,6 +160,7 @@ public final class RPG implements Runnable
 		
 		// Draw here
 		Component.onRender(g2d, viewportPosition, viewportScale);
+		Component.onRenderOverlay(g2d);
 		
 		// Dispose canvas
 		g2d.dispose();

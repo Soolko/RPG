@@ -8,9 +8,9 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-import rpg.Component;
 import rpg.RPG;
 import rpg.Resources;
+import rpg.architecture.Component;
 import rpg.maths.Vector2;
 import rpg.world.biomes.Biome;
 import rpg.world.biomes.Biome.BlendMode;
@@ -71,6 +71,7 @@ public class ProceduralWorld extends Component
 	
 	public ProceduralWorld(Generator generator, Biome[] biomes)
 	{
+		super(true);
 		this.generator = generator;
 		this.biomes = biomes;
 	}
@@ -152,4 +153,5 @@ public class ProceduralWorld extends Component
 	
 	@Override public void fixedUpdate() { }
 	@Override public void update() { }
+	@Override public void renderOverlay(Graphics2D g2d) { }
 }

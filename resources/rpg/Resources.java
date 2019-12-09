@@ -79,7 +79,7 @@ public final class Resources
 		return image;
 	}
 	
-	public static int[] splitPixel(int pixel)
+	private static int[] splitPixel(int pixel)
 	{
 		return new int[]
 		{
@@ -90,12 +90,8 @@ public final class Resources
 		};
 	}
 	
-	public static int combinePixel(int[] pixel)
-	{
-		return combinePixel(pixel[0], pixel[1], pixel[2], pixel[3]);
-	}
-	
-	public static int combinePixel(int r, int g, int b, int a)
+	private static int combinePixel(int[] pixel) { return combinePixel(pixel[0], pixel[1], pixel[2], pixel[3]); }
+	private static int combinePixel(int r, int g, int b, int a)
 	{
 		int argb = 0;
 		

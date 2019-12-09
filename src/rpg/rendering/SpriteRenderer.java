@@ -3,8 +3,8 @@ package rpg.rendering;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-import rpg.Component;
 import rpg.RPG;
+import rpg.architecture.Component;
 import rpg.maths.Vector2;
 
 public class SpriteRenderer extends Component
@@ -53,6 +53,10 @@ public class SpriteRenderer extends Component
 		);
 	}
 	
-	@Override protected void fixedUpdate() { }
-	@Override protected void update() { }
+	@Override
+	public void fixedUpdate() { }
+	@Override
+	public void update() { }
+	@Override
+	public void renderOverlay(Graphics2D g2d) { }
 }
