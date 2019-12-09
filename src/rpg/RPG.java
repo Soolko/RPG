@@ -15,9 +15,6 @@ import javax.swing.JFrame;
 
 import rpg.maths.Vector2;
 import rpg.world.ProceduralWorld;
-import rpg.world.biomes.Biome;
-import rpg.world.biomes.PlainsBiome;
-import rpg.world.biomes.OceanBiome;
 import rpg.world.noise.SimplexNoise;
 
 public final class RPG implements Runnable
@@ -34,13 +31,15 @@ public final class RPG implements Runnable
 	public RPG()
 	{
 		// Window
+		boolean fullscreen = config.get("fullscreen");
+		
 		frame.setResizable(false);
-		frame.setSize(config.<Integer>get("width"), config.<Integer>get("height"));
+		frame.setSize(config.get("width"), config.get("height"));
+		frame.setUndecorated(fullscreen);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowListener()
 		{
-			@Override
-			public void windowClosing(WindowEvent e) { running.set(false); }
+			@Override public void windowClosing(WindowEvent e) { running.set(false); }
 			
 			@Override public void windowActivated(WindowEvent e) { }
 			@Override public void windowClosed(WindowEvent e) { }
@@ -65,17 +64,11 @@ public final class RPG implements Runnable
 		Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
 		Graphics frameGraphics = frame.getGraphics();
 		
-		PlainsBiome plains = new PlainsBiome();
-		plains.noiseThreashold = 0.2;
-		
+		// Test World
 		ProceduralWorld world = new ProceduralWorld
 		(
 			new SimplexNoise(),
-			new Biome[]
-			{
-				new OceanBiome(),
-				plains
-			}
+			ProceduralWorld.DefaultBiomes
 		);
 		
 		while(running.get())
@@ -91,6 +84,7 @@ public final class RPG implements Runnable
 			frameGraphics.drawImage(canvas, 0, 0, width, height, null);
 		}
 		
+		// Dispose frame
 		frame.setVisible(false);
 		frame.dispose();
 	}
@@ -119,6 +113,7 @@ public final class RPG implements Runnable
 				Map<String, Object> map = new HashMap<String, Object>();
 				
 				// Window Size
+				map.put("fullscreen", false);
 				map.put("width", 1280);
 				map.put("height", 720);
 				

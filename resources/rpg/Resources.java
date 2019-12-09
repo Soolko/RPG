@@ -15,6 +15,8 @@ public final class Resources
 	// Textures
 	public static final BufferedImage MissingTexture;
 	public static final BufferedImage GrassBase;
+	public static final BufferedImage WaterBase;
+	public static final BufferedImage Sand;
 	
 	static
 	{
@@ -31,6 +33,8 @@ public final class Resources
 		
 		// Textures
 		GrassBase = load("textures/grass.png");
+		WaterBase = load("textures/ocean/water.png");
+		Sand = load("textures/sand.png");
 	}
 	
 	public static BufferedImage load(String path)

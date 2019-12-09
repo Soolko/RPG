@@ -2,19 +2,52 @@ package rpg.world;
 
 import static java.lang.Math.floor;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
 import rpg.RPG;
+import rpg.Resources;
 import rpg.maths.Vector2;
 import rpg.rendering.Renderable;
 import rpg.world.biomes.Biome;
+import rpg.world.biomes.Biome.BlendMode;
+import rpg.world.biomes.GenericBiome;
 import rpg.world.tiles.Tile;
 
 public class ProceduralWorld implements Renderable
 {
+	// Default biome creation
+	public static final Biome[] DefaultBiomes;
+	static
+	{
+		// Ocean
+		Tile oceanTile = new Tile(Resources.WaterBase);
+		oceanTile.collideable = true;
+		GenericBiome ocean = new GenericBiome(oceanTile, BlendMode.CONSTANT, 0.0);
+		
+		// Beach
+		Tile beachTile = new Tile(Resources.Sand);
+		GenericBiome beach = new GenericBiome(beachTile, BlendMode.SIMPLEX, 0.3);
+		
+		// Plains
+		Tile plainsTile = new Tile
+		(
+			Resources.setColour
+			(
+				Resources.GrassBase,
+				new Color(6, 204, 0)
+			)
+		);
+		GenericBiome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.4);
+		
+		// Construct array
+		DefaultBiomes = new Biome[] { ocean, beach, plains };
+	}
+	
+	// Values
 	public final Generator generator;
 	public Vector2 scale = new Vector2(0.01, 0.01);
 	
@@ -84,9 +117,9 @@ public class ProceduralWorld implements Renderable
 		Tile tile = null;
 		
 		// Get base tile
+		double worldMap = generator.sample(x * scale.x, y * scale.y);
 		for(Biome biome : biomes)
 		{
-			double worldMap = generator.sample(x * scale.x, y * scale.y);
 			switch(biome.blendMode)
 			{
 				case CONSTANT:

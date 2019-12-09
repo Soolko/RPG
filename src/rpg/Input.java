@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class Input implements KeyListener, Updateable
 {
-	public double speed = 1.0;
+	public double speed = 8.0;
 	
 	protected boolean[] keys = new boolean[65535];
 	public boolean isPressed(int code) { return keys[code]; }
