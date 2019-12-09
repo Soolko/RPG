@@ -23,10 +23,19 @@ public final class RPG implements Runnable
 	public AtomicBoolean running = new AtomicBoolean(true);
 	
 	// Viewport
+	public Component scene;
+	
 	public Vector2 viewportPosition = Vector2.Zero;
 	public Vector2 viewportScale = Vector2.One;
 	
 	public Input input = new Input();
+	
+	// Gameloop
+	private static final long FixedFrequency = 15;
+	public static final long FixedInterval = FixedFrequency * 1000;
+	public static final double FixedDelta = FixedInterval / 1000000;
+	
+	public double delta = 1.0;
 	
 	public RPG()
 	{
@@ -71,22 +80,62 @@ public final class RPG implements Runnable
 			ProceduralWorld.DefaultBiomes
 		);
 		
+		long last = System.nanoTime();
+		long lag = 0;
+		
 		while(running.get())
 		{
-			// Clear buffer
-			canvasGraphics.clearRect(0, 0, width, height);
+			long current = System.nanoTime();
+			long delta = current - last;
 			
-			// Draw here
-			world.render(canvasGraphics, viewportPosition, viewportScale);
-			input.update();
+			last = current;
+			last += delta;
 			
-			// Draw buffer
-			frameGraphics.drawImage(canvas, 0, 0, width, height, null);
+			while(lag >= FixedInterval)
+			{
+				fixedUpdate();
+				lag -= FixedInterval;
+			}
+			
+			this.delta = (double) lag / 1000000.0;
+			update();
+			
+			render(frameGraphics, canvasGraphics);
 		}
+		
+		// Dispose graphics
+		canvasGraphics.dispose();
+		frameGraphics.dispose();
 		
 		// Dispose frame
 		frame.setVisible(false);
 		frame.dispose();
+	}
+	
+	private synchronized void fixedUpdate()
+	{
+		
+	}
+	
+	private synchronized void update()
+	{
+		
+	}
+	
+	private synchronized void render(Graphics frameGraphics, Graphics2D canvasGraphics)
+	{
+		final int width = config.get("width");
+		final int height = config.get("height");
+		
+		// Clear buffer
+		canvasGraphics.clearRect(0, 0, width, height);
+		
+		// Draw here
+		world.render(canvasGraphics, viewportPosition, viewportScale);
+		input.update();
+		
+		// Draw buffer
+		frameGraphics.drawImage(canvas, 0, 0, width, height, null);
 	}
 	
 	// Static

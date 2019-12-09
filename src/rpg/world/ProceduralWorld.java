@@ -8,16 +8,16 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import rpg.Component;
 import rpg.RPG;
 import rpg.Resources;
 import rpg.maths.Vector2;
-import rpg.rendering.Renderable;
 import rpg.world.biomes.Biome;
 import rpg.world.biomes.Biome.BlendMode;
 import rpg.world.biomes.GenericBiome;
 import rpg.world.tiles.Tile;
 
-public class ProceduralWorld implements Renderable
+public class ProceduralWorld extends Component
 {
 	// Default biome creation
 	public static final Biome[] DefaultBiomes;
@@ -70,7 +70,7 @@ public class ProceduralWorld implements Renderable
 	}
 	
 	@Override
-	public void render(Graphics2D g2d, Vector2 position, Vector2 scale)
+	protected void render(Graphics2D g2d, Vector2 position, Vector2 scale)
 	{
 		Vector2 bottomRight = new Vector2
 		(
@@ -142,5 +142,17 @@ public class ProceduralWorld implements Renderable
 		int y2 = -y + (int) (RPG.frame.getHeight() / RPG.BaseScale) + 2;
 		
 		return new Rectangle(-x, -y, x2, y2);
+	}
+	
+	@Override
+	protected void fixedUpdate()
+	{
+		
+	}
+	
+	@Override
+	protected void update()
+	{
+		
 	}
 }
