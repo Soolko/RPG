@@ -28,12 +28,12 @@ public class ProceduralWorld extends Component
 	{
 		// Ocean
 		Tile oceanTile = new Tile(Resources.WaterBase);
-		oceanTile.collideable = true;
+		oceanTile.water = true;
 		GenericBiome ocean = new GenericBiome(oceanTile, BlendMode.CONSTANT, 0.0);
 		
 		// Beach
 		Tile beachTile = new Tile(Resources.Sand);
-		GenericBiome beach = new GenericBiome(beachTile, BlendMode.SIMPLEX, 0.3);
+		GenericBiome beach = new GenericBiome(beachTile, BlendMode.SIMPLEX, 0.4);
 		
 		// Plains
 		Tile plainsTile = new Tile
@@ -44,7 +44,7 @@ public class ProceduralWorld extends Component
 				new Color(6, 204, 0)
 			)
 		);
-		GenericBiome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.4);
+		GenericBiome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.6);
 		
 		// Construct array
 		DefaultBiomes = new Biome[] { ocean, beach, plains };
@@ -55,7 +55,7 @@ public class ProceduralWorld extends Component
 	
 	// Values
 	public final Generator generator;
-	public Vector2 scale = new Vector2(0.01, 0.01);
+	public Vector2 scale = new Vector2(0.1, 0.1);
 	
 	public final Biome[] biomes;
 	
