@@ -59,6 +59,8 @@ public final class Resources
 	
 	public static BufferedImage setColour(BufferedImage image, Color colour)
 	{
+		BufferedImage output = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		
 		for(int x = 0; x < image.getWidth(); x++)
 		for(int y = 0; y < image.getHeight(); y++)
 		{
@@ -74,9 +76,10 @@ public final class Resources
 			
 			// Recombine into pixel to set
 			int pixel = combinePixel(rgba);
-			image.setRGB(x, y, pixel);
+			output.setRGB(x, y, pixel);
 		}
-		return image;
+		
+		return output;
 	}
 	
 	private static int[] splitPixel(int pixel)

@@ -44,10 +44,21 @@ public class ProceduralWorld extends Component
 				new Color(6, 204, 0)
 			)
 		);
-		GenericBiome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.6);
+		GenericBiome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.5);
+		
+		// Deep Forest
+		Tile forestTile = new Tile
+		(
+			Resources.setColour
+			(
+				Resources.GrassBase,
+				new Color(6, 117, 2)
+			)
+		);
+		GenericBiome forest = new GenericBiome(forestTile, BlendMode.SIMPLEX, 0.7);
 		
 		// Construct array
-		DefaultBiomes = new Biome[] { ocean, beach, plains };
+		DefaultBiomes = new Biome[] { ocean, beach, plains, forest };
 		
 		// Construct default world
 		DefaultWorld = new ProceduralWorld(DefaultGenerator, DefaultBiomes);
@@ -55,7 +66,7 @@ public class ProceduralWorld extends Component
 	
 	// Values
 	public final Generator generator;
-	public Vector2 scale = new Vector2(0.1, 0.1);
+	public Vector2 scale = new Vector2(0.05, 0.05);
 	
 	public final Biome[] biomes;
 	
