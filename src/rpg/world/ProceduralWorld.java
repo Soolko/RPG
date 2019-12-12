@@ -66,7 +66,7 @@ public class ProceduralWorld extends Component
 	
 	// Values
 	public final Generator generator;
-	public Vector2 scale = new Vector2(0.05, 0.05);
+	public Vector2 scale = new Vector2(0.05, 0.07);
 	
 	public final Biome[] biomes;
 	

@@ -1,5 +1,6 @@
 package rpg.world.structure;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,6 +16,7 @@ public class Structure
 	public class Entry
 	{
 		public String resource;
+		public Color colour;
 		
 		public int x, y;
 		
