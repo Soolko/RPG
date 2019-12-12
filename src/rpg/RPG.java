@@ -72,7 +72,7 @@ public final class RPG implements Runnable
 	private TimerTask clearValuesTask = new TimerTask()
 	{
 		@Override
-		public synchronized void run()
+		public void run()
 		{
 			fixedPerSecond.set(fixeds.get());
 			rendersPerSecond.set(renders.get());
@@ -126,7 +126,7 @@ public final class RPG implements Runnable
 				lag -= FixedInterval;
 			}
 			
-			this.delta = (double) lag / 1000000.0;
+			this.delta = (double) lag / 1000000000.0;
 			update();
 			
 			render(canvas, frameGraphics);
@@ -145,18 +145,15 @@ public final class RPG implements Runnable
 		frame.dispose();
 	}
 	
-	private synchronized void fixedUpdate() { Component.onFixedUpdate(); }
-	private synchronized void update() { Component.onUpdate(); }
+	private void fixedUpdate() { Component.onFixedUpdate(); }
+	private void update() { Component.onUpdate(); }
 	
-	private synchronized void render(BufferedImage canvas, Graphics frameGraphics)
+	private void render(BufferedImage canvas, Graphics frameGraphics)
 	{
-		final int width = config.get("width");
-		final int height = config.get("height");
-		
 		Graphics2D g2d = canvas.createGraphics();
 		
 		// Clear buffer
-		g2d.clearRect(0, 0, width, height);
+		g2d.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
 		// Draw here
 		Component.onRender(g2d, viewportPosition, viewportScale);
@@ -166,14 +163,14 @@ public final class RPG implements Runnable
 		g2d.dispose();
 		
 		// Draw buffer
-		frameGraphics.drawImage(canvas, 0, 0, width, height, null);
+		frameGraphics.drawImage(canvas, 0, 0, null);
 	}
 	
 	// Static
 	public static final RPG instance;
 	
 	private static final String name = "RPG";
-	private static final String title = name;
+	public static final String title = name;
 	public static final JFrame frame = new JFrame(title);
 	
 	public static final File configFile = new File(name + ".yml");

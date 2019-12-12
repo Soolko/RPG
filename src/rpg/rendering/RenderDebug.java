@@ -1,9 +1,11 @@
 package rpg.rendering;
 
+import static rpg.rendering.ui.StringTools.drawLine;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Rectangle2D;
 import java.security.InvalidParameterException;
 
 import rpg.RPG;
@@ -11,7 +13,7 @@ import rpg.architecture.Component;
 import rpg.architecture.RunAlways;
 import rpg.maths.Vector2;
 
-public final class RenderDebug extends Component
+public class RenderDebug extends Component
 {
 	// Default enabled to false
 	public RenderDebug() { enabled = false; }
@@ -34,29 +36,14 @@ public final class RenderDebug extends Component
 	}
 	
 	@Override
-	public synchronized void renderOverlay(Graphics2D g2d)
+	public void renderOverlay(Graphics2D g2d)
 	{
-		drawLine(g2d, "Frame Updates (FPS): " + RPG.instance.rendersPerSecond.get(), 0);
-		drawLine(g2d, "Physics Updates (TPS): " + RPG.instance.fixedPerSecond.get(), 1);
-		drawLine(g2d, "Delta Time: " + RPG.instance.delta, 2);
+		Point offset = new Point(offsetX, offsetY);
+		drawLine(g2d, "Frame Updates (FPS): " + RPG.instance.rendersPerSecond.get(), textColour, backgroundOpacity, offset, 0);
+		drawLine(g2d, "Physics Updates (TPS): " + RPG.instance.fixedPerSecond.get(), textColour, backgroundOpacity, offset, 1);
 	}
 	
-	private void drawLine(Graphics2D g2d, String line, int lineNumber)
-	{
-		Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(line, g2d);
-		
-		Color previous = g2d.getColor();
-		g2d.setColor(new Color(0, 0, 0, backgroundOpacity));
-		
-		int horizontalOffset = offsetY + (int) (lineNumber * bounds.getHeight());
-		g2d.fillRect(offsetX, horizontalOffset, (int) bounds.getWidth() + 1, (int) bounds.getHeight() + 1);
-		
-		g2d.setColor(textColour);
-		g2d.drawString(line, offsetX, horizontalOffset + (int) bounds.getHeight());
-		
-		g2d.setColor(previous);
-	}
-	
+	// Timeout
 	protected double timer = -1;
 	protected static final double timeout = 0.2;
 	
@@ -71,6 +58,11 @@ public final class RenderDebug extends Component
 			else timer = -1;
 		}
 		
+		toggleEnabled();
+	}
+	
+	protected void toggleEnabled()
+	{
 		if(RPG.instance.input.isPressed(KeyEvent.VK_F3))
 		{
 			enabled = !enabled;
@@ -78,8 +70,6 @@ public final class RenderDebug extends Component
 		}
 	}
 	
-	@Override
-	public void fixedUpdate() { }
-	@Override
-	public void render(Graphics2D g2d, Vector2 pos, Vector2 scale) { }
+	@Override public void fixedUpdate() { }
+	@Override public void render(Graphics2D g2d, Vector2 pos, Vector2 scale) { }
 }
