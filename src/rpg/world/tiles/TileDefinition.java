@@ -1,14 +1,22 @@
 package rpg.world.tiles;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class TileDefinition implements Serializable
 {
 	private static final long serialVersionUID = 9212750754180264807L;
+	
+	private static final HashMap<String, Integer> defaultColour;
+	static
+	{
+		defaultColour = new HashMap<String, Integer>();
+		defaultColour.put("R", 255);
+		defaultColour.put("G", 255);
+		defaultColour.put("B", 255);
+		defaultColour.put("B", 255);
+	}
 	
 	/*
 	 * DO NOT USE FINAL ON THESE
@@ -22,9 +30,10 @@ public class TileDefinition implements Serializable
 	public String key;
 	
 	/** Path to the used texture. */
-	public File texturePath;
+	public String texturePath;
 	/** Colour to set the texture to. */
-	public Color colour = Color.white;
+	public HashMap<String, Integer> colour = defaultColour;
+	
 	public int textureScale = 16;
 	
 	/*

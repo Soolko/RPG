@@ -1,8 +1,8 @@
 package rpg.architecture;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import rpg.maths.Vector2;
 
@@ -19,7 +19,7 @@ public abstract class Component
 	public abstract void renderOverlay(Graphics2D g2d);
 	
 	// Static
-	public static List<Component> components = new ArrayList<Component>();
+	public static List<Component> components = new CopyOnWriteArrayList<Component>();
 	
 	public static void onFixedUpdate()
 	{

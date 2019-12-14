@@ -4,6 +4,7 @@ import static java.lang.Math.floor;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import rpg.architecture.Component;
 import rpg.maths.Vector2;
 import rpg.rendering.TileRenderer;
 import rpg.world.biomes.Biome;
+import rpg.world.biomes.Biome.BlendMode;
+import rpg.world.biomes.GenericBiome;
 import rpg.world.noise.SimplexNoise;
 import rpg.world.tiles.Tile;
 
@@ -23,10 +26,16 @@ public class ProceduralWorld extends Component
 	static
 	{
 		// Ocean
-		
+		final Tile oceanTile;
+		try
+		{
+			oceanTile = new Tile(RPG.manager.load("water.yml"));
+		}
+		catch(FileNotFoundException e) { throw new RuntimeException(e); }
+		Biome ocean = new GenericBiome(oceanTile, BlendMode.CONSTANT, 0.0);
 		
 		// Construct array
-		final Biome[] DefaultBiomes = new Biome[] { };
+		final Biome[] DefaultBiomes = new Biome[] { ocean };
 		
 		// Construct default world
 		DefaultWorld = new ProceduralWorld(DefaultGenerator, DefaultBiomes);
@@ -39,7 +48,7 @@ public class ProceduralWorld extends Component
 	public final Biome[] biomes;
 	
 	// Tilemap
-	public class PositionedTile
+	public static class PositionedTile
 	{
 		public int x, y;
 		public TileRenderer renderer;

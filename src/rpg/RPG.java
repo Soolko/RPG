@@ -20,6 +20,7 @@ import rpg.architecture.Component;
 import rpg.maths.Vector2;
 import rpg.rendering.RenderDebug;
 import rpg.world.ProceduralWorld;
+import rpg.world.tiles.TileManager;
 
 public final class RPG implements Runnable
 {
@@ -34,7 +35,7 @@ public final class RPG implements Runnable
 	// Gameloop
 	private static final long FixedFrequency = 16666;
 	public static final long FixedInterval = FixedFrequency * 1000;
-	public static final double FixedDelta = FixedInterval / 1000000;
+	public static final double FixedDelta = FixedInterval / 1000000.0;
 	
 	public double delta = 1.0;
 	
@@ -177,6 +178,7 @@ public final class RPG implements Runnable
 	
 	// Render static
 	public static final double BaseScale = 64;
+	public static final TileManager manager = new TileManager();
 	
 	static
 	{

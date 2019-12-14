@@ -1,22 +1,19 @@
 package rpg.world.tiles;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
-import org.yaml.snakeyaml.Yaml;
+import rpg.Resources;
 
 public final class TileManager
 {
 	public HashMap<String, Tile> definitions = new HashMap<String, Tile>();
 	
-	public TileDefinition load(File definition) throws FileNotFoundException
+	public TileDefinition load(String path) throws FileNotFoundException
 	{
-		final Yaml yaml = new Yaml();
-		TileDefinition tileDefinition = yaml.load(new FileInputStream(definition));
-		Tile tile = new Tile(tileDefinition);
+		TileDefinition def = Resources.loadDefinition(path);
 		
+		Tile tile = new Tile(def);
 		definitions.put(tile.key, tile);
 		return tile;
 	}
