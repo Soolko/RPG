@@ -14,7 +14,7 @@ public abstract class Component
 	public boolean enabled = true; 
 	
 	public abstract void fixedUpdate();
-	public abstract void update();
+	public abstract void update(double delta);
 	public abstract void render(Graphics2D g2d, Vector2 position);
 	public abstract void renderOverlay(Graphics2D g2d);
 	
@@ -33,13 +33,13 @@ public abstract class Component
 		}
 	}
 	
-	public static void onUpdate()
+	public static void onUpdate(double delta)
 	{
 		for(Component component : components)
 		{
 			try
 			{
-				if(component.enabled || isRunAlways(component, "update")) component.update();
+				if(component.enabled || isRunAlways(component, "update", double.class)) component.update(delta);
 			}
 			catch(Exception e) { throw new RuntimeException(e); }
 		}

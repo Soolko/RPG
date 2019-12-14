@@ -31,6 +31,6 @@ public class TileRenderer extends Component
 	}
 	
 	@Override public void fixedUpdate() { }
-	@Override public void update() { }
+	@Override public void update(double delta) { }
 	@Override public void renderOverlay(Graphics2D g2d) { }
 }

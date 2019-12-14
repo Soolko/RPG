@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 
 import rpg.architecture.Component;
 import rpg.maths.Vector2;
+import rpg.player.Input;
 import rpg.rendering.RenderDebug;
 import rpg.world.ProceduralWorld;
 import rpg.world.tiles.TileManager;
@@ -151,7 +152,7 @@ public final class RPG implements Runnable
 	}
 	
 	private void fixedUpdate() { Component.onFixedUpdate(); }
-	private void update() { Component.onUpdate(); }
+	private void update() { Component.onUpdate(delta); }
 	
 	private void render(Graphics2D g2d, Dimension canvas, Graphics frameGraphics)
 	{

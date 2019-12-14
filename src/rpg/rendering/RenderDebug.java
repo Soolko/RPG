@@ -48,12 +48,12 @@ public class RenderDebug extends Component
 	protected static final double timeout = 0.2;
 	
 	@RunAlways @Override
-	public synchronized void update()
+	public synchronized void update(double delta)
 	{
 		// Timeout between presses
 		if(timer >= 0)
 		{
-			timer += RPG.instance.delta;
+			timer += delta;
 			if(timer < timeout) return;
 			else timer = -1;
 		}
