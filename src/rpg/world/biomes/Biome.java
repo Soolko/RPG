@@ -1,5 +1,6 @@
 package rpg.world.biomes;
 
+import rpg.rendering.TileRenderer;
 import rpg.world.noise.NoiseAlgorithm;
 import rpg.world.noise.SimplexNoise;
 import rpg.world.tiles.Tile;
@@ -16,7 +17,7 @@ public abstract class Biome
 		this.noiseThreashold = noiseThreashold;
 	}
 	
-	public static enum BlendMode
+	public enum BlendMode
 	{
 		CONSTANT(null),
 		SIMPLEX(new SimplexNoise());
@@ -25,5 +26,5 @@ public abstract class Biome
 		BlendMode(NoiseAlgorithm algorithm) { this.algorithm = algorithm; }
 	}
 	
-	public abstract Tile tileAt(double val);
+	public abstract TileRenderer tileAt(double val);
 }

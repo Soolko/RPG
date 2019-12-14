@@ -27,11 +27,7 @@ public class ProceduralWorld extends Component
 	{
 		// Ocean
 		final Tile oceanTile;
-		try
-		{
-			oceanTile = new Tile(RPG.manager.load("water.yml"));
-		}
-		catch(FileNotFoundException e) { throw new RuntimeException(e); }
+		oceanTile = new Tile(RPG.manager.load("water.yml"));
 		Biome ocean = new GenericBiome(oceanTile, BlendMode.CONSTANT, 0.0);
 		
 		// Construct array
@@ -74,7 +70,7 @@ public class ProceduralWorld extends Component
 		);
 		
 		Rectangle currentBounds = getBounds(position, bottomRight);
-		if(generatedBounds != currentBounds) generate(currentBounds);
+		if(!currentBounds.equals(generatedBounds)) generate(currentBounds);
 		
 		for(PositionedTile tile : tiles)
 		{
@@ -100,16 +96,16 @@ public class ProceduralWorld extends Component
 			PositionedTile tile = new PositionedTile();
 			tile.x = x;
 			tile.y = y;
-			tile.renderer = new TileRenderer(generateAt(x, y));
+			tile.renderer = generateAt(x, y);
 			tiles.add(tile);
 		}
 		
 		generatedBounds = currentBounds;
 	}
 	
-	public Tile generateAt(double x, double y)
+	public TileRenderer generateAt(double x, double y)
 	{
-		Tile tile = null;
+		TileRenderer tile = null;
 		
 		// Get base tile
 		double worldMap = generator.sample(x * scale.x, y * scale.y);

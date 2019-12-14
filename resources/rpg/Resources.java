@@ -65,7 +65,7 @@ public final class Resources
 					definition.texturePath = (String) obj.get(key);
 					break;
 				case "texturescale":
-					definition.textureScale = (int) obj.get(key);
+					definition.textureScale = (Integer) obj.get(key);
 					break;
 				case "colour":
 					/*
@@ -75,14 +75,14 @@ public final class Resources
 					definition.colour.putAll((HashMap<String, Integer>) obj.get(key));
 					break;
 				case "animated":
-					definition.animated = (boolean) obj.get(key);
+					definition.animated = (Boolean) obj.get(key);
 					break;
 				case "animationframes":
 					definition.animationFrames.clear();
 					definition.animationFrames.putAll((HashMap<String, Point>) obj.get(key));
 					break;
 				case "collideable":
-					definition.collideable = (boolean) obj.get(key);
+					definition.collideable = (Boolean) obj.get(key);
 					break;
 			}
 		}
@@ -94,7 +94,11 @@ public final class Resources
 		InputStream resource = Resources.class.getResourceAsStream(path);
 		
 		if(resource == null) return MissingTexture;
-		else return ImageIO.read(resource);
+		else
+		{
+			BufferedImage image = ImageIO.read(resource);
+			return image;
+		}
 	}
 	
 	public static BufferedImage setColour(BufferedImage image, Color colour)

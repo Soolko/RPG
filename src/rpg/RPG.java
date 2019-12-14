@@ -1,7 +1,6 @@
 package rpg;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -97,10 +96,11 @@ public final class RPG implements Runnable
 		
 		int width = config.get("width");
 		int height = config.get("height");
+		Dimension canvasSize = new Dimension(width, height);
 		
 		// Render setup
 		BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+		Graphics2D canvasGraphics = canvas.createGraphics();
 		Graphics frameGraphics = frame.getGraphics();
 		
 		// Debug stuff
@@ -129,7 +129,12 @@ public final class RPG implements Runnable
 			this.delta = (double) lag / 1000000000.0;
 			update();
 			
-			render(canvas, frameGraphics);
+			render(canvasGraphics, canvasSize, frameGraphics);
+			
+			// Draw buffer
+			frameGraphics.drawImage(canvas, 0, 0, null);
+			
+			// Profiling
 			renders.incrementAndGet();
 		}
 		
@@ -148,22 +153,14 @@ public final class RPG implements Runnable
 	private void fixedUpdate() { Component.onFixedUpdate(); }
 	private void update() { Component.onUpdate(); }
 	
-	private void render(BufferedImage canvas, Graphics frameGraphics)
+	private void render(Graphics2D g2d, Dimension canvas, Graphics frameGraphics)
 	{
-		Graphics2D g2d = canvas.createGraphics();
-		
 		// Clear buffer
-		g2d.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g2d.clearRect(0, 0, canvas.width, canvas.height);
 		
 		// Draw here
 		Component.onRender(g2d, viewportPosition);
 		Component.onRenderOverlay(g2d);
-		
-		// Dispose canvas
-		g2d.dispose();
-		
-		// Draw buffer
-		frameGraphics.drawImage(canvas, 0, 0, null);
 	}
 	
 	// Static

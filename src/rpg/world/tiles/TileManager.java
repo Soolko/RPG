@@ -1,6 +1,5 @@
 package rpg.world.tiles;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 import rpg.Resources;
@@ -9,7 +8,7 @@ public final class TileManager
 {
 	public HashMap<String, Tile> definitions = new HashMap<String, Tile>();
 	
-	public TileDefinition load(String path) throws FileNotFoundException
+	public TileDefinition load(String path)
 	{
 		TileDefinition def = Resources.loadDefinition(path);
 		
