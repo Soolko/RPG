@@ -28,7 +28,6 @@ public final class RPG implements Runnable
 	
 	// Viewport
 	public Vector2 viewportPosition = Vector2.Zero;
-	public Vector2 viewportScale = Vector2.One;
 	
 	public Input input = new Input();
 	
@@ -156,7 +155,7 @@ public final class RPG implements Runnable
 		g2d.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
 		// Draw here
-		Component.onRender(g2d, viewportPosition, viewportScale);
+		Component.onRender(g2d, viewportPosition);
 		Component.onRenderOverlay(g2d);
 		
 		// Dispose canvas

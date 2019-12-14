@@ -34,6 +34,6 @@ public class Input extends Component implements KeyListener
 	}
 	
 	@Override public void update() { }
-	@Override public void render(Graphics2D g2d, Vector2 position, Vector2 scale) { }
+	@Override public void render(Graphics2D g2d, Vector2 position) { }
 	@Override public void renderOverlay(Graphics2D g2d) { }
 }

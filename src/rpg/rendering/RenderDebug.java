@@ -71,5 +71,5 @@ public class RenderDebug extends Component
 	}
 	
 	@Override public void fixedUpdate() { }
-	@Override public void render(Graphics2D g2d, Vector2 pos, Vector2 scale) { }
+	@Override public void render(Graphics2D g2d, Vector2 pos) { }
 }

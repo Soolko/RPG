@@ -15,7 +15,7 @@ public abstract class Component
 	
 	public abstract void fixedUpdate();
 	public abstract void update();
-	public abstract void render(Graphics2D g2d, Vector2 position, Vector2 scale);
+	public abstract void render(Graphics2D g2d, Vector2 position);
 	public abstract void renderOverlay(Graphics2D g2d);
 	
 	// Static
@@ -45,15 +45,15 @@ public abstract class Component
 		}
 	}
 	
-	public static void onRender(Graphics2D g2d, Vector2 position, Vector2 scale)
+	public static void onRender(Graphics2D g2d, Vector2 position)
 	{
 		for(Component component : components)
 		{
 			try
 			{
-				if(component.enabled || isRunAlways(component, "render", new Class[] { Graphics2D.class, Vector2.class, Vector2.class }))
+				if(component.enabled || isRunAlways(component, "render", new Class[] { Graphics2D.class, Vector2.class }))
 				{
-					component.render(g2d, position, scale);
+					component.render(g2d, position);
 				}
 			}
 			catch(Exception e) { throw new RuntimeException(e); }

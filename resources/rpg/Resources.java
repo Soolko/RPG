@@ -5,18 +5,11 @@ import static java.lang.Math.sqrt;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
 
 public final class Resources
 {
 	// Textures
 	public static final BufferedImage MissingTexture;
-	public static final BufferedImage GrassBase;
-	public static final BufferedImage WaterBase;
-	public static final BufferedImage Sand;
 	
 	static
 	{
@@ -30,31 +23,6 @@ public final class Resources
 		g2d.fillRect(0, 0, 1, 1);
 		g2d.fillRect(1, 1, 2, 2);
 		g2d.dispose();
-		
-		// Textures
-		GrassBase = load("textures/grass.png");
-		WaterBase = load("textures/ocean/water.png");
-		Sand = load("textures/sand.png");
-	}
-	
-	public static BufferedImage load(String path)
-	{
-		BufferedImage image = null;
-		try { image = getImage(path); }
-		catch(IOException e)
-		{
-			System.err.println("Failed to load texture: " + path);
-			image = MissingTexture;
-		}
-		return image;
-	}
-	
-	private static BufferedImage getImage(String path) throws IOException
-	{
-		InputStream resource = Resources.class.getResourceAsStream(path);
-		
-		if(resource == null) return MissingTexture;
-		else return ImageIO.read(resource);
 	}
 	
 	public static BufferedImage setColour(BufferedImage image, Color colour)

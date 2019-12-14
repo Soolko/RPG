@@ -13,10 +13,10 @@ public class Structure
 {
 	public List<Entry> entries = new ArrayList<Entry>();
 	
-	public class Entry
+	public static class Entry
 	{
 		public String resource;
-		public Color colour;
+		public Color colour = Color.white;
 		
 		public int x, y;
 		
