@@ -6,10 +6,7 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -83,6 +80,17 @@ public final class RPG implements Runnable
 		}
 	};
 	
+	private final Timer randomTickTimer = new Timer();
+	private final TimerTask randomTick = new TimerTask()
+	{
+		@Override
+		public synchronized void run()
+		{
+			Component.onRandomTick();
+			randomTickTimer.schedule(randomTick, (new Random().nextInt(2) + 1) * 1000);
+		}
+	};
+	
 	@Override
 	public synchronized void run()
 	{
@@ -113,8 +121,8 @@ public final class RPG implements Runnable
 		long last = System.nanoTime();
 		long lag = 0;
 		
-		Enemy enemy = new Enemy("entities/enemy.yml");
 		Player player = new Player();
+		Enemy enemy = new Enemy("entities/enemy.yml");
 		
 		while(running.get())
 		{
@@ -145,6 +153,7 @@ public final class RPG implements Runnable
 		
 		// Dispose timer
 		clearTaskTimer.cancel();
+		randomTickTimer.cancel();
 		
 		// Dispose graphics
 		canvasGraphics.dispose();

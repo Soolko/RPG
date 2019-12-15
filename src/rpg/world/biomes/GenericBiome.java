@@ -1,5 +1,6 @@
 package rpg.world.biomes;
 
+import rpg.entities.Entity;
 import rpg.rendering.TileRenderer;
 import rpg.world.tiles.Tile;
 

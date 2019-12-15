@@ -3,7 +3,6 @@ package rpg.world.biomes;
 import rpg.rendering.TileRenderer;
 import rpg.world.noise.NoiseAlgorithm;
 import rpg.world.noise.SimplexNoise;
-import rpg.world.tiles.Tile;
 
 public abstract class Biome
 {

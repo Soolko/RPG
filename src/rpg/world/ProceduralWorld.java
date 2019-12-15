@@ -6,11 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.jetbrains.annotations.NotNull;
 import rpg.RPG;
 import rpg.Component;
 import rpg.Resources;
+import rpg.entities.Entity;
+import rpg.entities.enemies.Enemy;
 import rpg.maths.Vector2;
 import rpg.rendering.TileRenderer;
 import rpg.world.biomes.Biome;
@@ -18,7 +21,6 @@ import rpg.world.biomes.Biome.BlendMode;
 import rpg.world.biomes.GenericBiome;
 import rpg.world.noise.SimplexNoise;
 import rpg.world.tiles.Tile;
-import rpg.world.tiles.TileDefinition;
 
 public class ProceduralWorld extends Component
 {
@@ -37,7 +39,7 @@ public class ProceduralWorld extends Component
 		
 		// Plains
 		Tile plainsTile = new Tile(Resources.loadTile("textures/plains/grass.yml"));
-		Biome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.6);
+		GenericBiome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.6);
 		
 		// Construct array
 		final Biome[] DefaultBiomes = new Biome[] { ocean, beach, plains };
@@ -49,6 +51,7 @@ public class ProceduralWorld extends Component
 	// Values
 	public final Generator generator;
 	public Vector2 scale = new Vector2(0.05, 0.07);
+	public long seed = 0L;
 	
 	public final Biome[] biomes;
 	
@@ -72,12 +75,6 @@ public class ProceduralWorld extends Component
 	@Override
 	public void render(Graphics2D g2d, Vector2 position)
 	{
-		Vector2 bottomRight = new Vector2
-		(
-			position.x() + RPG.frame.getWidth(),
-			position.y() + RPG.frame.getHeight()
-		);
-		
 		Rectangle currentBounds = getBounds(position);
 		if(!currentBounds.equals(generatedBounds)) generate(currentBounds);
 		
@@ -93,7 +90,7 @@ public class ProceduralWorld extends Component
 	 * Not the most efficient way to flush then rebuild,
 	 * but time limits require it.
 	 */
-	public void generate(Rectangle currentBounds)
+	public void generate(@NotNull Rectangle currentBounds)
 	{
 		// Flush tiles
 		tiles.clear();
@@ -115,6 +112,7 @@ public class ProceduralWorld extends Component
 	public TileRenderer generateAt(double x, double y)
 	{
 		TileRenderer tile = null;
+		Random r = new Random(seed);
 		
 		// Get base tile
 		double worldMap = generator.sample(x * scale.x, y * scale.y);
