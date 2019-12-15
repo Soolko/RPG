@@ -1,4 +1,4 @@
-package rpg.rendering;
+package rpg.rendering.ui;
 
 import static rpg.rendering.ui.StringTools.drawLine;
 

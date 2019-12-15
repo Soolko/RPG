@@ -28,9 +28,7 @@ public class ProceduralWorld extends Component
 	static
 	{
 		// Ocean
-		TileDefinition def = Resources.loadTile("textures/ocean/water.yml");
-		System.out.println(def.colour.getColour());
-		Tile oceanTile = new Tile(def);
+		Tile oceanTile = new Tile(Resources.loadTile("textures/ocean/water.yml"));
 		Biome ocean = new GenericBiome(oceanTile, BlendMode.CONSTANT, 0.0);
 		
 		// Beach

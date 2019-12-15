@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import rpg.entities.enemies.Enemy;
 import rpg.maths.Vector2;
 import rpg.entities.player.Player;
-import rpg.rendering.RenderDebug;
+import rpg.rendering.ui.DeathScreen;
+import rpg.rendering.ui.RenderDebug;
 import rpg.world.ProceduralWorld;
 
 public final class RPG implements Runnable
@@ -31,7 +32,6 @@ public final class RPG implements Runnable
 	public Vector2 viewportPosition = Vector2.Zero;
 	
 	public final Input input = new Input();
-	public final Player player = new Player();
 	
 	// Gameloop
 	private static final long FixedFrequency = 16666;
@@ -103,7 +103,7 @@ public final class RPG implements Runnable
 		// Render setup
 		BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D canvasGraphics = canvas.createGraphics();
-		Graphics frameGraphics = frame.getGraphics();
+		Graphics frameGraphics = frame.getContentPane().getGraphics();
 		
 		// Debug stuff
 		RenderDebug renderDebug = new RenderDebug();
@@ -114,7 +114,7 @@ public final class RPG implements Runnable
 		long lag = 0;
 		
 		Enemy enemy = new Enemy("entities/enemy.yml");
-		Player test = new Player();
+		Player player = new Player();
 		
 		while(running.get())
 		{
