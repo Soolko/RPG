@@ -1,4 +1,4 @@
-package rpg.architecture;
+package rpg;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

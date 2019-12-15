@@ -1,9 +1,10 @@
-package rpg.architecture;
+package rpg;
 
 import java.awt.Graphics2D;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.jetbrains.annotations.NotNull;
 import rpg.maths.Vector2;
 
 public abstract class Component
@@ -17,6 +18,7 @@ public abstract class Component
 	public abstract void update(double delta);
 	public abstract void render(Graphics2D g2d, Vector2 position);
 	public abstract void renderOverlay(Graphics2D g2d);
+	public abstract void randomTick();
 	
 	// Static
 	public static List<Component> components = new CopyOnWriteArrayList<Component>();
@@ -75,7 +77,22 @@ public abstract class Component
 		}
 	}
 	
-	private static boolean isRunAlways(Object object, String method) throws NoSuchMethodException, SecurityException
+	public static void onRandomTick()
+	{
+		for(Component component : components)
+		{
+			try
+			{
+				if(component.enabled || isRunAlways(component, "randomTick"))
+				{
+					component.randomTick();
+				}
+			}
+			catch(Exception e) { throw new RuntimeException(e); }
+		}
+	}
+	
+	private static boolean isRunAlways(@NotNull Object object, String method) throws NoSuchMethodException, SecurityException
 	{
 		return object.getClass().getMethod(method).isAnnotationPresent(RunAlways.class);
 	}
@@ -85,7 +102,7 @@ public abstract class Component
 		return isRunAlways(object, method, new Class[] { arg });
 	}
 	
-	private static boolean isRunAlways(Object object, String method, Class<?>[] args) throws NoSuchMethodException, SecurityException
+	private static boolean isRunAlways(@NotNull Object object, String method, Class<?>[] args) throws NoSuchMethodException, SecurityException
 	{
 		return object.getClass().getMethod(method, args).isAnnotationPresent(RunAlways.class);
 	}

@@ -3,7 +3,7 @@ package rpg.rendering;
 import java.awt.Graphics2D;
 
 import rpg.RPG;
-import rpg.architecture.Component;
+import rpg.Component;
 import rpg.maths.Vector2;
 import rpg.world.tiles.Tile;
 
@@ -33,4 +33,5 @@ public class TileRenderer extends Component
 	@Override public void fixedUpdate() { }
 	@Override public void update(double delta) { }
 	@Override public void renderOverlay(Graphics2D g2d) { }
+	@Override public void randomTick() { }
 }

@@ -15,9 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JFrame;
 
-import rpg.architecture.Component;
 import rpg.maths.Vector2;
-import rpg.player.Input;
+import rpg.entities.player.Player;
 import rpg.rendering.RenderDebug;
 import rpg.world.ProceduralWorld;
 import rpg.world.tiles.TileManager;
@@ -30,7 +29,8 @@ public final class RPG implements Runnable
 	// Viewport
 	public Vector2 viewportPosition = Vector2.Zero;
 	
-	public Input input = new Input();
+	public final Input input = new Input();
+	public final Player player = new Player();
 	
 	// Gameloop
 	private static final long FixedFrequency = 16666;
@@ -69,7 +69,7 @@ public final class RPG implements Runnable
 	public AtomicInteger fixedPerSecond = new AtomicInteger();
 	public AtomicInteger rendersPerSecond = new AtomicInteger();
 	
-	private TimerTask clearValuesTask = new TimerTask()
+	private final TimerTask clearValuesTask = new TimerTask()
 	{
 		@Override
 		public void run()
@@ -112,6 +112,8 @@ public final class RPG implements Runnable
 		long last = System.nanoTime();
 		long lag = 0;
 		
+		Player test = new Player();
+		
 		while(running.get())
 		{
 			long current = System.nanoTime();
@@ -130,7 +132,7 @@ public final class RPG implements Runnable
 			this.delta = (double) lag / 1000000000.0;
 			update();
 			
-			render(canvasGraphics, canvasSize, frameGraphics);
+			render(canvasGraphics, canvasSize);
 			
 			// Draw buffer
 			frameGraphics.drawImage(canvas, 0, 0, null);
@@ -154,7 +156,7 @@ public final class RPG implements Runnable
 	private void fixedUpdate() { Component.onFixedUpdate(); }
 	private void update() { Component.onUpdate(delta); }
 	
-	private void render(Graphics2D g2d, Dimension canvas, Graphics frameGraphics)
+	private void render(Graphics2D g2d, Dimension canvas)
 	{
 		// Clear buffer
 		g2d.clearRect(0, 0, canvas.width, canvas.height);
@@ -181,20 +183,16 @@ public final class RPG implements Runnable
 	static
 	{
 		// Default settings
-		Config.Callbacks callbacks = new Config.Callbacks()
+		Config.Callbacks callbacks = () ->
 		{
-			@Override
-			public Map<String, Object> defaultState()
-			{
-				Map<String, Object> map = new HashMap<String, Object>();
-				
-				// Window Size
-				map.put("fullscreen", false);
-				map.put("width", 1280);
-				map.put("height", 720);
-				
-				return map;
-			}
+			Map<String, Object> map = new HashMap<>();
+			
+			// Window Size
+			map.put("fullscreen", false);
+			map.put("width", 1280);
+			map.put("height", 720);
+			
+			return map;
 		};
 		
 		// Config
@@ -210,7 +208,7 @@ public final class RPG implements Runnable
 	public static void main(String[] args) throws InterruptedException
 	{
 		// Start game in new thread
-		Thread mainThread = new Thread(instance);
+		final Thread mainThread = new Thread(instance);
 		mainThread.setName("Main Game Thread");
 		mainThread.start();
 		

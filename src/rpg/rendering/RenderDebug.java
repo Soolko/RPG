@@ -9,8 +9,8 @@ import java.awt.event.KeyEvent;
 import java.security.InvalidParameterException;
 
 import rpg.RPG;
-import rpg.architecture.Component;
-import rpg.architecture.RunAlways;
+import rpg.Component;
+import rpg.RunAlways;
 import rpg.maths.Vector2;
 
 public class RenderDebug extends Component
@@ -72,4 +72,5 @@ public class RenderDebug extends Component
 	
 	@Override public void fixedUpdate() { }
 	@Override public void render(Graphics2D g2d, Vector2 pos) { }
+	@Override public void randomTick() { }
 }

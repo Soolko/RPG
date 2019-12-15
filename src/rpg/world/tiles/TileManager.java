@@ -10,7 +10,7 @@ public final class TileManager
 	
 	public TileDefinition load(String path)
 	{
-		TileDefinition def = Resources.loadDefinition(path);
+		TileDefinition def = Resources.loadTile(path);
 		
 		Tile tile = new Tile(def);
 		definitions.put(tile.key, tile);

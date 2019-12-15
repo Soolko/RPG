@@ -4,12 +4,11 @@ import static java.lang.Math.floor;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import rpg.RPG;
-import rpg.architecture.Component;
+import rpg.Component;
 import rpg.maths.Vector2;
 import rpg.rendering.TileRenderer;
 import rpg.world.biomes.Biome;
@@ -27,7 +26,7 @@ public class ProceduralWorld extends Component
 	{
 		// Ocean
 		final Tile oceanTile;
-		oceanTile = new Tile(RPG.manager.load("water.yml"));
+		oceanTile = new Tile(RPG.manager.load("textures/ocean/water.yml"));
 		Biome ocean = new GenericBiome(oceanTile, BlendMode.CONSTANT, 0.0);
 		
 		// Construct array
@@ -138,4 +137,5 @@ public class ProceduralWorld extends Component
 	@Override public void fixedUpdate() { }
 	@Override public void update(double delta) { }
 	@Override public void renderOverlay(Graphics2D g2d) { }
+	@Override public void randomTick() { }
 }

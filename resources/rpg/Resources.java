@@ -4,16 +4,16 @@ import static java.lang.Math.sqrt;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
 import org.yaml.snakeyaml.Yaml;
 
+import org.yaml.snakeyaml.constructor.Constructor;
+import rpg.entities.Entity;
 import rpg.world.tiles.TileDefinition;
 
 public final class Resources
@@ -47,46 +47,16 @@ public final class Resources
 		return image;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static TileDefinition loadDefinition(String yamlPath)
+	public static Entity.Definition loadEntity(String yamlPath)
 	{
-		final Yaml yaml = new Yaml();
-		HashMap<String, ?> obj = yaml.load(Resources.class.getResourceAsStream(yamlPath));
-		
-		TileDefinition definition = new TileDefinition();
-		for(String key : obj.keySet())
-		{
-			switch(key.toLowerCase())
-			{
-				case "key":
-					definition.key = (String) obj.get(key);
-					break;
-				case "texturepath":
-					definition.texturePath = (String) obj.get(key);
-					break;
-				case "texturescale":
-					definition.textureScale = (Integer) obj.get(key);
-					break;
-				case "colour":
-					/*
-					 * Why tf was is it casting to a string?????
-					 */
-					definition.colour.clear();
-					definition.colour.putAll((HashMap<String, Integer>) obj.get(key));
-					break;
-				case "animated":
-					definition.animated = (Boolean) obj.get(key);
-					break;
-				case "animationframes":
-					definition.animationFrames.clear();
-					definition.animationFrames.putAll((HashMap<String, Point>) obj.get(key));
-					break;
-				case "collideable":
-					definition.collideable = (Boolean) obj.get(key);
-					break;
-			}
-		}
-		return definition;
+		final Yaml yaml = new Yaml(new Constructor(Entity.Definition.class));
+		return yaml.load(Resources.class.getResourceAsStream(yamlPath));
+	}
+	
+	public static TileDefinition loadTile(String yamlPath)
+	{
+		final Yaml yaml = new Yaml(new Constructor(TileDefinition.class));
+		return yaml.load(Resources.class.getResourceAsStream(yamlPath));
 	}
 	
 	private static BufferedImage getImage(String path) throws IOException

@@ -1,16 +1,16 @@
 package rpg.world.tiles;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
 import rpg.Resources;
+import rpg.rendering.SerializedColour;
+
+import java.awt.image.BufferedImage;
 
 public class Tile extends TileDefinition
 {
 	private static final long serialVersionUID = 663599313743574368L;
 	
 	public BufferedImage texture;
-	public Color colour;
+	public SerializedColour colour;
 	
 	public Tile(TileDefinition definition)
 	{
@@ -19,19 +19,13 @@ public class Tile extends TileDefinition
 		texturePath = definition.texturePath;
 		textureScale = definition.textureScale;
 		
-		colour = new Color
-		(
-			definition.colour.get("R"),
-			definition.colour.get("G"),
-			definition.colour.get("B"),
-			definition.colour.get("A")
-		);
+		colour = definition.colour;
 		
 		animated = definition.animated;
 		animationFrames = definition.animationFrames;
 		
 		collideable = definition.collideable;
 		
-		texture = Resources.setColour(Resources.load(texturePath), this.colour);
+		texture = Resources.setColour(Resources.load(texturePath), this.colour.getColour());
 	}
 }

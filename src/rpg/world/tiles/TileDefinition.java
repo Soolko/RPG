@@ -1,6 +1,8 @@
 package rpg.world.tiles;
 
-import java.awt.Point;
+import rpg.rendering.SerializedColour;
+
+import java.awt.*;
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -8,15 +10,7 @@ public class TileDefinition implements Serializable
 {
 	private static final long serialVersionUID = 9212750754180264807L;
 	
-	private static final HashMap<String, Integer> defaultColour;
-	static
-	{
-		defaultColour = new HashMap<String, Integer>();
-		defaultColour.put("R", 255);
-		defaultColour.put("G", 255);
-		defaultColour.put("B", 255);
-		defaultColour.put("B", 255);
-	}
+	public TileDefinition() {}
 	
 	/*
 	 * DO NOT USE FINAL ON THESE
@@ -32,7 +26,7 @@ public class TileDefinition implements Serializable
 	/** Path to the used texture. */
 	public String texturePath;
 	/** Colour to set the texture to. */
-	public HashMap<String, Integer> colour = defaultColour;
+	public SerializedColour colour = new SerializedColour();
 	
 	public int textureScale = 16;
 	
@@ -42,7 +36,7 @@ public class TileDefinition implements Serializable
 	 * The rest are component-specific.
 	 */
 	public boolean animated = false;
-	public HashMap<String, Point> animationFrames = new HashMap<String, Point>();
+	public HashMap<String, Point> animationFrames = new HashMap<>();
 	
 	public boolean collideable = true;
 }
