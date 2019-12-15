@@ -10,6 +10,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -35,16 +37,17 @@ public final class Resources
 		g2d.dispose();
 	}
 	
-	public static BufferedImage load(String path)
+	public static BufferedImage load(String path, Color colour)
 	{
-		BufferedImage image = null;
+		BufferedImage image;
 		try { image = getImage(path); }
 		catch(IOException e)
 		{
 			System.err.println("Failed to load texture: " + path);
 			image = MissingTexture;
 		}
-		return image;
+		if(colour.equals(Color.white)) return image;
+		else return setColour(image, colour);
 	}
 	
 	public static Entity.Definition loadEntity(String yamlPath)
@@ -64,14 +67,11 @@ public final class Resources
 		InputStream resource = Resources.class.getResourceAsStream(path);
 		
 		if(resource == null) return MissingTexture;
-		else
-		{
-			BufferedImage image = ImageIO.read(resource);
-			return image;
-		}
+		else return ImageIO.read(resource);
 	}
 	
-	public static BufferedImage setColour(BufferedImage image, Color colour)
+	@NotNull
+	public static BufferedImage setColour(@NotNull BufferedImage image, Color colour)
 	{
 		BufferedImage output = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
@@ -96,6 +96,8 @@ public final class Resources
 		return output;
 	}
 	
+	@NotNull
+	@Contract(value = "_ -> new", pure = true)
 	private static int[] splitPixel(int pixel)
 	{
 		return new int[]
@@ -107,7 +109,8 @@ public final class Resources
 		};
 	}
 	
-	private static int combinePixel(int[] pixel) { return combinePixel(pixel[0], pixel[1], pixel[2], pixel[3]); }
+	@Contract(pure = true)
+	private static int combinePixel(@NotNull int[] pixel) { return combinePixel(pixel[0], pixel[1], pixel[2], pixel[3]); }
 	private static int combinePixel(int r, int g, int b, int a)
 	{
 		int argb = 0;

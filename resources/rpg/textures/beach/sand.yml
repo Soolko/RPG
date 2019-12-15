@@ -1,8 +1,8 @@
 # Key to assign this to
-key: "water"
+key: "sand"
 
 # Texture details
-texturePath: "textures/ocean/water.png"
+texturePath: "textures/beach/sand.png"
 textureScale: 16
 colour:
   r: 255

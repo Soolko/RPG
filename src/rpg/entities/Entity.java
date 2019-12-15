@@ -24,7 +24,7 @@ public class Entity extends Component
 	public Entity(String definitionFile)
 	{
 		definition = Resources.loadEntity(definitionFile);
-		texture = Resources.setColour(Resources.load(definition.texturePath), definition.colour.getColour());
+		texture = Resources.setColour(Resources.load(definition.texturePath, Color.white), definition.colour.getColour());
 		frame = definition.animationFrames.get(Direction.DOWN.frameID);
 	}
 	

@@ -2,12 +2,13 @@ package rpg.rendering;
 
 import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
+import java.io.Serializable;
 
-public class SerializedColour
+public class SerializedColour implements Serializable
 {
 	public int r, g, b, a;
 	
-	public SerializedColour() { this(255, 255, 255, 255); }
+	public SerializedColour() { this(Color.white); }
 	public SerializedColour(@NotNull Color colour)
 	{
 		this

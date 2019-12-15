@@ -1,13 +1,13 @@
 # Key to assign this to
-key: "water"
+key: "plains_grass"
 
 # Texture details
-texturePath: "textures/ocean/water.png"
+texturePath: "textures/grass.png"
 textureScale: 16
 colour:
-  r: 255
+  r: 0
   g: 255
-  b: 255
+  b: 0
   a: 255
 
 # Animation

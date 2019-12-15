@@ -19,7 +19,6 @@ import rpg.maths.Vector2;
 import rpg.entities.player.Player;
 import rpg.rendering.RenderDebug;
 import rpg.world.ProceduralWorld;
-import rpg.world.tiles.TileManager;
 
 public final class RPG implements Runnable
 {
@@ -178,7 +177,6 @@ public final class RPG implements Runnable
 	
 	// Render static
 	public static final double BaseScale = 96;
-	public static final TileManager manager = new TileManager();
 	
 	static
 	{

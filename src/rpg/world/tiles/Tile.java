@@ -1,31 +1,33 @@
 package rpg.world.tiles;
 
+import org.jetbrains.annotations.NotNull;
 import rpg.Resources;
 import rpg.rendering.SerializedColour;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Tile extends TileDefinition
 {
 	private static final long serialVersionUID = 663599313743574368L;
 	
-	public BufferedImage texture;
-	public SerializedColour colour;
+	public final BufferedImage texture;
+	public Color colour;
 	
-	public Tile(TileDefinition definition)
+	public Tile(@NotNull TileDefinition definition)
 	{
 		key = definition.key;
 		
 		texturePath = definition.texturePath;
 		textureScale = definition.textureScale;
 		
-		colour = definition.colour;
+		colour = definition.colour.getColour();
 		
 		animated = definition.animated;
 		animationFrames = definition.animationFrames;
 		
 		collideable = definition.collideable;
 		
-		texture = Resources.setColour(Resources.load(texturePath), this.colour.getColour());
+		texture = Resources.load(texturePath, colour);
 	}
 }

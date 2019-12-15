@@ -7,8 +7,10 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import rpg.RPG;
 import rpg.Component;
+import rpg.Resources;
 import rpg.maths.Vector2;
 import rpg.rendering.TileRenderer;
 import rpg.world.biomes.Biome;
@@ -16,6 +18,7 @@ import rpg.world.biomes.Biome.BlendMode;
 import rpg.world.biomes.GenericBiome;
 import rpg.world.noise.SimplexNoise;
 import rpg.world.tiles.Tile;
+import rpg.world.tiles.TileDefinition;
 
 public class ProceduralWorld extends Component
 {
@@ -25,12 +28,21 @@ public class ProceduralWorld extends Component
 	static
 	{
 		// Ocean
-		final Tile oceanTile;
-		oceanTile = new Tile(RPG.manager.load("textures/ocean/water.yml"));
+		TileDefinition def = Resources.loadTile("textures/ocean/water.yml");
+		System.out.println(def.colour.getColour());
+		Tile oceanTile = new Tile(def);
 		Biome ocean = new GenericBiome(oceanTile, BlendMode.CONSTANT, 0.0);
 		
+		// Beach
+		Tile beachTile = new Tile(Resources.loadTile("textures/beach/sand.yml"));
+		Biome beach = new GenericBiome(beachTile, BlendMode.SIMPLEX, 0.45);
+		
+		// Plains
+		Tile plainsTile = new Tile(Resources.loadTile("textures/plains/grass.yml"));
+		Biome plains = new GenericBiome(plainsTile, BlendMode.SIMPLEX, 0.6);
+		
 		// Construct array
-		final Biome[] DefaultBiomes = new Biome[] { ocean };
+		final Biome[] DefaultBiomes = new Biome[] { ocean, beach, plains };
 		
 		// Construct default world
 		DefaultWorld = new ProceduralWorld(DefaultGenerator, DefaultBiomes);
@@ -68,7 +80,7 @@ public class ProceduralWorld extends Component
 			position.y() + RPG.frame.getHeight()
 		);
 		
-		Rectangle currentBounds = getBounds(position, bottomRight);
+		Rectangle currentBounds = getBounds(position);
 		if(!currentBounds.equals(generatedBounds)) generate(currentBounds);
 		
 		for(PositionedTile tile : tiles)
@@ -124,7 +136,7 @@ public class ProceduralWorld extends Component
 		return tile;
 	}
 	
-	public Rectangle getBounds(Vector2 topLeft, Vector2 bottomRight)
+	public Rectangle getBounds(@NotNull Vector2 topLeft)
 	{
 		int x = (int) floor(topLeft.x() / RPG.BaseScale) + 1;
 		int y = (int) floor(topLeft.y() / RPG.BaseScale) + 1;
