@@ -1,5 +1,7 @@
 package rpg.entities;
 
+import org.jetbrains.annotations.NotNull;
+import rpg.RPG;
 import rpg.Resources;
 import rpg.Component;
 import rpg.maths.Vector2;
@@ -26,15 +28,18 @@ public class Entity extends Component
 		frame = definition.animationFrames.get(Direction.DOWN.frameID);
 	}
 	
-	public Vector2 getScreenSpacePosition(Vector2 viewport)
+	public Vector2 getScreenSpacePosition(@NotNull Vector2 viewport)
 	{
 		double sX = viewport.x();
 		double sY = viewport.y();
 		
-		double x = sX + position.x;
-		double y = sY + position.y;
+		double x = sX - position.x;
+		double y = sY - position.y;
 		
-		return new Vector2(sX, sY);
+		x += RPG.frame.getWidth() / 2.0 - RPG.BaseScale / 2;
+		y += RPG.frame.getHeight() / 2.0 - RPG.BaseScale / 2;
+		
+		return new Vector2(x, y);
 	}
 	
 	public enum Direction
@@ -47,6 +52,8 @@ public class Entity extends Component
 		final String frameID;
 		Direction(String frameID) { this.frameID = frameID; }
 	}
+	
+	public boolean moving = false;
 	public Direction direction = Direction.DOWN;
 	
 	private double health = 100.0;
@@ -75,35 +82,45 @@ public class Entity extends Component
 	@Override
 	public void update(double delta)
 	{
-		if(direction != lastDirection)
+		if(!moving)
 		{
 			frame = definition.animationFrames.get(direction.frameID);
-			animationTimer = 0.0;
 		}
 		else
 		{
-			if(animationTimer > definition.animationSpeed)
+			if(direction != lastDirection)
 			{
-				frame = definition.animationFrames.get(frame.next);
+				frame = definition.animationFrames.get(direction.frameID);
 				animationTimer = 0.0;
 			}
-			else animationTimer += delta;
+			else
+			{
+				if(animationTimer > definition.animationSpeed)
+				{
+					frame = definition.animationFrames.get(frame.next);
+					animationTimer = 0.0;
+				}
+				else animationTimer += delta;
+			}
+			
+			lastDirection = direction;
 		}
-		
-		lastDirection = direction;
 	}
 	
 	@Override
 	public void render(Graphics2D g2d, Vector2 position)
 	{
 		Vector2 pos = getScreenSpacePosition(position);
+		int sX = frame.x * definition.textureScale;
+		int sY = frame.y * definition.textureScale;
+		
 		g2d.drawImage
 		(
 			texture,
 			(int) pos.x(), (int) pos.y(),
-			definition.textureScale, definition.textureScale,
-			frame.x * definition.textureScale, frame.y * definition.textureScale,
-			definition.textureScale, definition.textureScale,
+			(int) (pos.x() + RPG.BaseScale), (int) (pos.y() + RPG.BaseScale),
+			sX, sY,
+			sX + definition.textureScale, sY + definition.textureScale,
 			null
 		);
 	}

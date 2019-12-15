@@ -1,7 +1,7 @@
 texturePath: "entities/mage.png"
 textureScale: 16
 
-animationSpeed: 0.25
+animationSpeed: 0.2
 animationFrames:
   # Down
   down:

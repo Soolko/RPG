@@ -177,7 +177,7 @@ public final class RPG implements Runnable
 	public static final Config config;
 	
 	// Render static
-	public static final double BaseScale = 64;
+	public static final double BaseScale = 96;
 	public static final TileManager manager = new TileManager();
 	
 	static

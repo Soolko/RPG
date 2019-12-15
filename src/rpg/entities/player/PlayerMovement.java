@@ -2,6 +2,7 @@ package rpg.entities.player;
 
 import rpg.RPG;
 import rpg.Component;
+import rpg.entities.Entity;
 import rpg.maths.Vector2;
 
 import java.awt.*;
@@ -12,10 +13,13 @@ import static java.lang.Math.*;
 
 public class PlayerMovement extends Component
 {
+	private final Player player;
+	public PlayerMovement(Player player) { this.player = player; }
+	
 	// Settings
-	public double acceleration = 12;
-	public double deceleration = 6;
-	public double maxVelocity = 1;
+	public double acceleration = 10;
+	public double deceleration = 5;
+	public double maxVelocity = 0.5;
 	
 	/** Velocity of the player. */
 	public double velocityX = 0.0, velocityY = 0.0;
@@ -27,6 +31,21 @@ public class PlayerMovement extends Component
 		if(RPG.instance.input.isPressed(VK_S) || RPG.instance.input.isPressed(VK_DOWN)) velocityY -= acceleration * delta;
 		if(RPG.instance.input.isPressed(VK_A) || RPG.instance.input.isPressed(VK_LEFT)) velocityX += acceleration * delta;
 		if(RPG.instance.input.isPressed(VK_D) || RPG.instance.input.isPressed(VK_RIGHT)) velocityX -= acceleration * delta;
+		
+		player.moving = !(velocityX == 0 && velocityY == 0);
+		if(player.moving)
+		{
+			if(abs(velocityY) > abs(velocityX))
+			{
+				if(velocityY > 0)	player.direction = Entity.Direction.UP;
+				else				player.direction = Entity.Direction.DOWN;
+			}
+			else
+			{
+				if(velocityX > 0)	player.direction = Entity.Direction.LEFT;
+				else				player.direction = Entity.Direction.RIGHT;
+			}
+		}
 		
 		Vector2 vel = new Vector2(velocityX, velocityY);
 		double magnitude = vel.magnitude();
@@ -63,6 +82,8 @@ public class PlayerMovement extends Component
 		
 		RPG.instance.viewportPosition.x = x;
 		RPG.instance.viewportPosition.y = y;
+		player.position.x = x;
+		player.position.y = y;
 	}
 	
 	// Unused

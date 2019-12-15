@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Player extends Entity
 {
-	public final PlayerMovement movement = new PlayerMovement();
+	public final PlayerMovement movement = new PlayerMovement(this);
 	
 	public Player()
 	{
