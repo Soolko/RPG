@@ -41,11 +41,12 @@ public class RenderDebug extends Component
 		Point offset = new Point(offsetX, offsetY);
 		drawLine(g2d, "Frame Updates (FPS): " + RPG.instance.rendersPerSecond.get(), textColour, backgroundOpacity, offset, 0);
 		drawLine(g2d, "Physics Updates (TPS): " + RPG.instance.fixedPerSecond.get(), textColour, backgroundOpacity, offset, 1);
+		drawLine(g2d, "Player Position: " + RPG.instance.viewportPosition, textColour, backgroundOpacity, offset, 2);
 	}
 	
 	// Timeout
 	protected double timer = -1;
-	protected static final double timeout = 0.2;
+	protected static final double timeout = 0.3;
 	
 	@RunAlways @Override
 	public synchronized void update(double delta)

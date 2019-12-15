@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JFrame;
 
+import org.jetbrains.annotations.NotNull;
+import rpg.entities.enemies.Enemy;
 import rpg.maths.Vector2;
 import rpg.entities.player.Player;
 import rpg.rendering.RenderDebug;
@@ -111,6 +113,7 @@ public final class RPG implements Runnable
 		long last = System.nanoTime();
 		long lag = 0;
 		
+		Enemy enemy = new Enemy("entities/enemy.yml");
 		Player test = new Player();
 		
 		while(running.get())
@@ -155,7 +158,7 @@ public final class RPG implements Runnable
 	private void fixedUpdate() { Component.onFixedUpdate(); }
 	private void update() { Component.onUpdate(delta); }
 	
-	private void render(Graphics2D g2d, Dimension canvas)
+	private void render(@NotNull Graphics2D g2d, @NotNull Dimension canvas)
 	{
 		// Clear buffer
 		g2d.clearRect(0, 0, canvas.width, canvas.height);

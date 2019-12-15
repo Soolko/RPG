@@ -16,7 +16,7 @@ public class Entity extends Component
 {
 	public final Definition definition;
 	
-	public Vector2 position = Vector2.Zero;
+	public Vector2 position = new Vector2(0, 0);
 	
 	public BufferedImage texture;
 	public Definition.AnimationFrame frame;
@@ -24,7 +24,7 @@ public class Entity extends Component
 	public Entity(String definitionFile)
 	{
 		definition = Resources.loadEntity(definitionFile);
-		texture = Resources.setColour(Resources.load(definition.texturePath, Color.white), definition.colour.getColour());
+		texture = Resources.load(definition.texturePath, definition.colour.getColour());
 		frame = definition.animationFrames.get(Direction.DOWN.frameID);
 	}
 	

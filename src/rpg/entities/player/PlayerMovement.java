@@ -19,7 +19,7 @@ public class PlayerMovement extends Component
 	// Settings
 	public double acceleration = 10;
 	public double deceleration = 5;
-	public double maxVelocity = 0.5;
+	public double maxVelocity = 0.3;
 	
 	/** Velocity of the player. */
 	public double velocityX = 0.0, velocityY = 0.0;

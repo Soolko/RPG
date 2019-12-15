@@ -53,6 +53,6 @@ public class Vector2
 	@Override
 	public String toString()
 	{
-		return "(" + x + ", " + y + ")";
+		return "(" + Maths.round(x, 2) + ", " + Maths.round(y, 2) + ")";
 	}
 }
